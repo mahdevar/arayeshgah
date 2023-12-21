@@ -1,0 +1,33 @@
+		<header id="main_header">
+			<section inline>
+				<button href="{{url_for('home')}}" icon="storefront">{{_('SITE NAME')}}</button>
+				<div class="group">
+					<input type="search" id="q" placeholder="{{_('SEARCH')}}">
+					<button type="submit" tabindex=-1 icon="search" aria-label="{{_('SEARCH')}}"></button>
+				</div>
+				#if request.endpoint != 'profile':
+				<button user href="{{url_for('profile')}}" icon="person"></button>
+				#endif
+				<button user click="sign_out" icon="logout" aria-label="{{_('SIGN OUT')}}"></button>
+				<button quest id="menus" collapse="collapsed-content" aria-label="{{_('MENUS')}}"></button>
+			</section>
+			<section quest id="collapsed-content" class="collapsible hide">
+				<form>
+					<section wide>
+						<div class="group">
+							<label for="user_name" icon="person"></label>
+							<input type="text" id="user_name" placeholder="{{_('USER NAME')}}" autocomplete="on" required>
+						</div>
+						<div class="group">
+							<label for="password" icon="lock"></label>
+							<input type="password" id="password" placeholder="{{_('PASSWORD')}}" autocomplete="on" required>
+						</div>
+					</section>
+					<footer narrow>
+						<button icon="login" click="sign_in" variant="primary">{{_('SIGN IN')}}</button>
+						<button icon="person_add" click="sign_up">{{_('SIGN UP')}}</button>
+					</footer>
+				</form>
+			</section>
+		</header>
+

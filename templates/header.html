@@ -1,0 +1,32 @@
+		<header id="main_header">
+			<div class="row">
+				<button click="navigate" parameter="/"><i>cut</i>{{_('SITE NAME')}}</button>
+				<div class="group">
+					<label for="query"><i>search</i></label>
+					<input type="search" id="query" placeholder="{{_('SEARCH')}}">
+				</div>
+				#if request.endpoint != 'profile':
+				<button class="for-users" click="navigate" parameter="{{url_for('profile')}}"><i>manage_accounts</i></button>
+				#endif
+				<button class="for-users" click="sign_out" aria-label="{{_('SIGN OUT')}}"><i>logout</i></button>
+				<button class="for-quests" id="menus" collapse="collapsed-content" aria-label="{{_('MENUS')}}"></button>
+			</div>
+			<form id="collapsed-content" class="for-quests collapsible hide">
+				<div class="boxes">
+					<div class="group">
+						<label for="user_name"><i>person</i></label>
+						<input type="text" id="user_name" placeholder="{{_('USER NAME')}}" autocomplete="on" required>
+					</div>
+					<div class="group">
+						<label for="password"><i>lock</i></label>
+						<input type="password" id="password" placeholder="{{_('PASSWORD')}}" autocomplete="on" required>
+					</div>
+				</div>
+				<div class="commands">
+					<button click="sign_in" variant="primary"><i>login</i>{{_('SIGN IN')}}</button>
+					<button click="sign_up" parameter="1"><i>person_add</i>{{_('USER')}}</button>
+					<button click="sign_up" parameter="2"><i>add_business</i>{{_('BARBER')}}</button>
+				</div>
+			</form>
+		</header>
+

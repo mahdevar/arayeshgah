@@ -1,0 +1,15 @@
+#set title = _('ERROR %s TITLE' % error.code)
+#extends "base.html"
+#block content
+<header>
+	<H1>
+		{{_('ERROR %s TITLE' % error.code)}}
+	</H1>
+</header>
+<section>
+	{{_('ERROR %s DESCRIPTION' % error.code)}}
+</section>
+<section class="commands">
+<button click="navigate" parameter="/"><i>cut</i>{{_('HOME')}}</button>
+</section>
+#endblock content

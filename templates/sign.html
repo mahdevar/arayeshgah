@@ -1,0 +1,26 @@
+#set title = _('SIGN PLEASE')
+#set PAGE_METAS = {'description': _('SIGN PLEASE')}
+#extends "base.html"
+#block content
+<form method="post">
+	<header>
+		<H1>
+			{{_('SIGN PLEASE')}}
+		</H1>
+	</header>
+	<section wide>
+		<div class="group">
+			<label for="user name" icon="person"></label>
+			<input type="text" id="user name" placeholder="{{_('USER NAME')}}" title="{{_('USER NAME')}}" autocomplete="on" required autofocus>
+		</div>
+		<div class="group">
+			<label for="password" icon="password"></label>
+			<input type="password" id="password" placeholder="{{_('PASSWORD')}}" title="{{_('PASSWORD')}}" autocomplete="on" required>
+		</div>
+	</section>
+	<footer narrow>
+		<button type="submit" variant="primary" icon="login">{{_('SIGN IN')}}</button>
+		<button type="submit" icon="person_add">{{_('SIGN UP')}}</button>
+	</footer>
+</form>
+#endblock content
