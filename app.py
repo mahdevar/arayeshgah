@@ -215,13 +215,13 @@ def user_data2():
 		return EMPTY, 412
 @post
 def shop(i: int):
-	if data := read_row('SELECT * FROM shops WHERE id=%s', [i]):
+	if data := read_row('SELECT * FROM shop WHERE id=%s', [i]):
 		return json_response(data), 200
 	else:
 		return EMPTY, 404
 @post
 def user_shops(i: int):
-	if data := read_table('SELECT * FROM shops WHERE owner=%s', [i]):
+	if data := read_table('SELECT * FROM shop WHERE owner=%s', [i]):
 		return json_response(data), 200
 	else:
 		return EMPTY, 404
@@ -256,8 +256,8 @@ def create_database():
 	connection.close()
 	with connect(**SQL_CONFIG) as connection:
 		with connection.cursor() as cursor:
-			for script in sorted(Path('.').glob('*.sql')):
-				LOG('Executing: ' + script.name)
+			for script in sorted(Path('queries').glob('*.sql')):
+				print('Executing: ' + script.name)
 				for query in script.read_text(encoding='utf-8').split(';'):
 					query = query.strip()
 					if query:
