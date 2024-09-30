@@ -14,6 +14,8 @@ from psycopg2.pool import ThreadedConnectionPool as CreatePool
 from sys import gettrace
 from threading import Event, Lock, Thread, Semaphore
 from time import time
+from config import SQL_CONFIG
+
 app = Flask(__name__, static_folder='file')
 app.jinja_env.line_statement_prefix = '#'
 G = app.jinja_env.globals
@@ -21,13 +23,6 @@ CONFIG = app.config
 DEFAULT_LANGUAGE = 'fa'
 ALLOWED_INACTIVITY = 6 * 60
 # Database specific configurations
-SQL_CONFIG = \
-{
-	'host': 'localhost',
-	'user': 'root',
-	'password': '121464',
-	'database': 'arayeshgah'
-}
 # CONFIG['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 # Initialize
 TRANSLATIONS = {}
@@ -282,8 +277,8 @@ with app.app_context():
 	g.connection = POOL.getconn()
 	g.cursor = g.connection.cursor(cursor_factory=RealDictCursor)
 	# Write translations
-	for language in [value for value in read_row('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'').values() if value != 'LANGUAGE CODE']:
-		TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in read_table('SELECT id, %s FROM translations' % language)]}
+	for language in [value for value in read_row('SELECT * FROM translation WHERE id=\'LANGUAGE CODE\'').values() if value != 'LANGUAGE CODE']:
+		TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in read_table('SELECT id, %s FROM translation' % language)]}
 	for language, translation in TRANSLATIONS.items():
 		with open('./file/%s.js' % language, 'w', encoding='utf-8') as file:
 			print('document.translation = %s;' % to_json(translation), file=file)
@@ -297,4 +292,4 @@ if __name__ == '__main__':
 	# app.run(debug=True)
 	print('!!!!!!!')
 	from waitress import serve
-	serve(app, listen='*:8080')
+	serve(app, listen='*:80')
