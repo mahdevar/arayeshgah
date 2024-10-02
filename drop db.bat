@@ -1,1 +1,0 @@
-"C:\Program Files\PostgreSQL\bin\dropdb.exe" --username=root --no-password arayeshgah
