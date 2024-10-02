@@ -1,7 +1,7 @@
 const l = async function(container_id)
 {
 	let container = E(container_id);
-	let data = await post('/user-data');
+	let data = await get('/user-data');
 	if('error code' in data)
 		message(T('SIGN UP: FAILURE'));
 	else
