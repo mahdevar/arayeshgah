@@ -4,7 +4,7 @@ from functools import wraps
 from hashlib import sha1
 from json import dumps
 from logging import basicConfig as logging_config, DEBUG
-from os import chdir, urandom
+from os import chdir, urandom, getpid
 from pathlib import Path
 from sys import gettrace
 from threading import Event, Semaphore, Thread
@@ -12,18 +12,34 @@ from time import time
 
 from flask import abort, Flask, g, render_template, request, send_file
 from flask.wrappers import Response
+from minio import Minio
 from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import ThreadedConnectionPool as CreatePool
+from redis import Redis
 
-from config import SQL_CONFIG
+from config import MINIO_CONFIG, REDIS_CONFIG, SQL_CONFIG
 
-# minio = Minio(**MINIO_CONFIG)
-# minio_ = minio.fput_object('users', 'a', 'D:\\Download\\3fe778a1f6c50712435d03d157149b8028339aeab5fd925044ad8d6b7232a30a.jpg')
+#from pickle import dumps, loads
 
-# redis = Redis(**REDIS_CONFIG)
-# redis['a'] = 'Hello'
-# print(redis['a'])
+#minio = Minio(**MINIO_CONFIG)
+#minio_ = minio.fput_object('data', 'a', 'D:\\Download\\3fe778a1f6c50712435d03d157149b8028339aeab5fd925044ad8d6b7232a30a.jpg')
+#exit()
+
+
+#redis = Redis(**REDIS_CONFIG)
+#redis.set_response_callback('hmget', lambda i: [loads(v) for v in i])
+#redis['a'] = '31'
+#redis['b'] = 'aa' #dumps(332)
+#b = redis['b']
+#print(redis.hmget('a'))
+#print(b)
+#print(b == 'hello')
+#print(redis.)
+#exit()
+
+
+print('>PID:', getpid())
 
 app = Flask(__name__, static_folder='file')
 app.jinja_env.line_statement_prefix = '#'
@@ -359,3 +375,5 @@ if __name__ == '__main__':
 	from waitress import serve
 
 	serve(app, listen='*:80')
+
+
