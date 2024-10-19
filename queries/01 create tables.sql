@@ -33,7 +33,7 @@ CREATE TABLE services
 	photos	TEXT[10],
 	price	INTEGER
 );
-CREATE TABLE proficiency
+CREATE TABLE proficiencies
 (
 	barber	INTEGER,
 	service	INTEGER
