@@ -167,7 +167,7 @@ read_row = lambda *query: _execute_(*query).fetchone()
 read_table = lambda *query: _execute_(*query).fetchall()
 write = lambda *query: _execute_(*query)
 write_many = lambda *query: _execute_many_(*query)
-new_id = lambda: read_row('SELECT nextval(\'new_id\')')['nextval']
+new_id = lambda entity: read_row('SELECT nextval(\'new_%s\')' % entity)['nextval']
 
 
 @app.template_global()
@@ -299,7 +299,7 @@ def sign_up():
 		return EMPTY, 409
 	else:
 		request.json['password'] = hash_string(request.json['password'])
-		write('INSERT INTO users (id, %s) VALUES (%s)' % (', '.join(request.json.keys()), ', '.join([r'%s'] * (len(request.json.keys()) + 1))), [new_id(), *request.json.values()])
+		write('INSERT INTO users (id, %s) VALUES (%s)' % (', '.join(request.json.keys()), ', '.join([r'%s'] * (len(request.json.keys()) + 1))), [new_id('user'), *request.json.values()])
 		g.connection.commit()
 		return EMPTY, 201
 
