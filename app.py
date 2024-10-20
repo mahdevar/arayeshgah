@@ -2,13 +2,18 @@ from atexit import register as run_at_exit
 from base64 import b32hexencode
 from functools import wraps
 from hashlib import sha1
-from json import dumps
+from json import dumps, loads
 from logging import basicConfig as logging_config, DEBUG
 from os import chdir, urandom, getpid
 from pathlib import Path
 from sys import gettrace
 from threading import Event, Semaphore, Thread
 from time import time
+
+
+from jdatetime import datetime as jdt, j_days_in_month
+
+
 
 from flask import abort, Flask, g, render_template, request, send_file
 from flask.wrappers import Response
@@ -17,19 +22,34 @@ from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import ThreadedConnectionPool as CreatePool
 from redis import Redis
+from pymongo import MongoClient
 
-from config import MINIO_CONFIG, REDIS_CONFIG, SQL_CONFIG
+from config import MINIO_CONFIG, MONGO_CONFIG, REDIS_CONFIG, SQL_CONFIG
+
+mongo = MongoClient(**MONGO_CONFIG)['a']
+#mongo['c'].insert_one({'_id': 1, 'a': 'hello', 'b': 3.14})
+from datetime import datetime
 
 #from pickle import dumps, loads
 
 #minio = Minio(**MINIO_CONFIG)
-#minio_ = minio.fput_object('data', 'a', 'D:\\Download\\3fe778a1f6c50712435d03d157149b8028339aeab5fd925044ad8d6b7232a30a.jpg')
+#minio_ = minio.fput_object('data', 'a', 'D:\\Download\\windowsdesktop-runtime-8.0.8-win-x64.exe')
+#minio_ = minio.fput_object('data', 'b', 'D:\\Download\\vidisco\\Vidisco ADMINISTRATION.rar')
 #exit()
 
 
-#redis = Redis(**REDIS_CONFIG)
+redis = Redis(**REDIS_CONFIG)
 #redis.set_response_callback('hmget', lambda i: [loads(v) for v in i])
-#redis['a'] = '31'
+#d = {'a': '31'}
+#d = mongo['c'].find_one({'_id': 1})#, {'_id': 0})
+
+#d = 3.14
+#redis['a'] = 3.14 #{'a': '31'}
+#redis['a'] = dumps(d)
+#v = loads(redis['a'])
+#redis.hset('a',{'b': 3.14})
+#print(v)
+#exit()
 #redis['b'] = 'aa' #dumps(332)
 #b = redis['b']
 #print(redis.hmget('a'))
@@ -37,6 +57,38 @@ from config import MINIO_CONFIG, REDIS_CONFIG, SQL_CONFIG
 #print(b == 'hello')
 #print(redis.)
 #exit()
+'''
+def _execute_(*args, **kwargs):
+	g.cursor.execute(*args, **kwargs)
+	return g.cursor
+
+def _execute_many_(*args, **kwargs):
+	g.cursor.executemany(*args, **kwargs)
+	return g.cursor
+
+
+read_row = lambda *query: _execute_(*query).fetchone()
+read_table = lambda *query: _execute_(*query).fetchall()
+
+
+
+
+
+connection = connect(**SQL_CONFIG)
+connection.autocommit = True
+#connection.cursor(cursor_factory=RealDictCursor)
+with connection.cursor() as cursor:
+	cursor.execute('SELECT * FROM users')
+	print(cursor.fetchall())
+
+
+#		g.connection = POOL.getconn()
+#		g.cursor = g.connection.cursor(cursor_factory=RealDictCursor)
+
+
+exit()
+
+'''
 
 
 print('>PID:', getpid())
@@ -324,31 +376,7 @@ def static_from_root():
 def fav():
 	return send_file('./file/favicon.svg')
 
-
-def create_database():
-	"""Create database, if necessary"""
-	connection = connect(**(SQL_CONFIG | {'database': 'postgres'}))
-	connection.autocommit = True
-	with connection.cursor() as cursor:
-		cursor.execute('CREATE DATABASE %s ENCODING UTF8' % SQL_CONFIG['database'])
-	connection.close()
-	with connect(**SQL_CONFIG) as connection:
-		with connection.cursor() as cursor:
-			for script in sorted(Path('queries').glob('*.sql')):
-				print('Executing: ' + script.name)
-				for query in script.read_text(encoding='utf-8').split(';'):
-					query = query.strip()
-					if query:
-						cursor.execute(query)
-		connection.commit()
-
-
-try:
-	POOL = CreatePool(1, 100, **SQL_CONFIG)
-except OperationalError:
-	# DB does not exist
-	create_database()
-	POOL = CreatePool(1, 100, **SQL_CONFIG)
+POOL = CreatePool(1, 100, **SQL_CONFIG)
 with app.app_context():
 	# Install error handlers
 	for code in 401, 404, 501:
@@ -357,8 +385,8 @@ with app.app_context():
 	g.connection = POOL.getconn()
 	g.cursor = g.connection.cursor(cursor_factory=RealDictCursor)
 	# Write translations
-	for language in [value for value in read_row('SELECT * FROM translation WHERE id=\'LANGUAGE CODE\'').values() if value != 'LANGUAGE CODE']:
-		TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in read_table('SELECT id, %s FROM translation' % language)]}
+	for language in [value for value in read_row('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'').values() if value != 'LANGUAGE CODE']:
+		TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in read_table('SELECT id, %s FROM translations' % language)]}
 	for language, translation in TRANSLATIONS.items():
 		with open('./file/%s.js' % language, 'w', encoding='utf-8') as file:
 			print('document.translation = %s;' % to_json(translation), file=file)
@@ -370,10 +398,8 @@ for scheduled_function in __SCHEDULED_FUNCTIONS__:
 run_at_exit(__STOP_SCHEDULER__.set)
 
 if __name__ == '__main__':
-	# app.run(debug=True)
-	print('!!!!!!!')
+	#app.run(debug=True)
+	#app.run(host='0.0.0.0', debug=True)
+	#print('!!!!!!!')
 	from waitress import serve
-
 	serve(app, listen='*:80')
-
-
