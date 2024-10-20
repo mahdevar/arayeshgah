@@ -2,3 +2,5 @@ Flask
 psycopg2
 redis
 minio
+jdatetime
+pymongo
