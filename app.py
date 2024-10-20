@@ -71,9 +71,6 @@ read_row = lambda *query: _execute_(*query).fetchone()
 read_table = lambda *query: _execute_(*query).fetchall()
 
 
-
-
-
 connection = connect(**SQL_CONFIG)
 connection.autocommit = True
 #connection.cursor(cursor_factory=RealDictCursor)
