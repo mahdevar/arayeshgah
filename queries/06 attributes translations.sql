@@ -25,5 +25,4 @@ INSERT INTO translations (id,	en,	fa) VALUES
 	('A: TIME',	'Time',	'زمان'),
 	('A: TITLE',	'Title',	'عنوان'),
 	('A: LAST ACTIVITY TIME',	'Time',	'زمان'),
-	('A: USER_NAME',	'Username',	'نام کاربری')
-;
+	('A: USER_NAME',	'Username',	'نام کاربری') ON CONFLICT DO NOTHING;

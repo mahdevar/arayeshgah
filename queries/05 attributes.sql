@@ -31,5 +31,4 @@ INSERT INTO attributes(title, icon, type) VALUES
 	('TIME',	'av_timer',	8),
 	('TITLE',	'title',	1),
 	('LAST ACTIVITY TIME',	'history',	8),
-	('USER_NAME',	'person',	1)
-;
+	('USER_NAME',	'person',	1) ON CONFLICT DO NOTHING;

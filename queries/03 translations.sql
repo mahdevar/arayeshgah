@@ -1,4 +1,5 @@
 INSERT INTO translations (id, en, fa) VALUES
+--	('ADD - BARBERSHOP',	'Add a Barbershop',	'افزودن یک آرایشگاه'),
 	('ADD - BARBER',	'Sign up as a Barber',	'نام نویسی (آرایشگر)'),
 	('ADD',	'Add',	'افزودن'),
 	('APPLY',	'Apply',	'اعمال'),
@@ -34,8 +35,4 @@ INSERT INTO translations (id, en, fa) VALUES
 	('SITE NAME',	'Arayeshgah',	'آرایشگاه'),
 	('TEXT DIRECTION',	'ltr',	'rtl'),
 	('FOOTER TEXT',	'The best of beauty near or at your home! Using the best quality tools for the precision cuts as well as traditional services, you receive the highest quality barbering and grooming services from well trained professionals.',	'بهترین‌های زیبایی در نزدیکی یا در خانه شما! با به کار بردن بهترین ابزارها برای آرایش و برشهای دقیق، خدمات زیبایی با بالاترین کیفیت را از متخصصان مجرب ما دریافت خواهید کرد.'),
-	('USER NAME',	'User name',	'نام کاربری')
---	('ADD - BARBERSHOP',	'Add a Barbershop',	'افزودن یک آرایشگاه'),
-;
-
-    
+	('USER NAME',	'User name',	'نام کاربری') ON CONFLICT DO NOTHING;

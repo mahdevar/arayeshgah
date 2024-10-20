@@ -1,7 +1,14 @@
-CREATE SEQUENCE new_id START WITH 100 CACHE 1;
+CREATE SEQUENCE new_user START WITH 100 CACHE 1;
+CREATE SEQUENCE new_shop START WITH 100 CACHE 1;
+CREATE SEQUENCE new_service START WITH 100 CACHE 1;
+CREATE SEQUENCE new_proficiency START WITH 100 CACHE 1;
+CREATE SEQUENCE new_vote START WITH 100 CACHE 1;
+CREATE SEQUENCE new_request START WITH 100 CACHE 1;
+CREATE SEQUENCE new_product START WITH 100 CACHE 1;
+CREATE SEQUENCE new_attribute START WITH 100 CACHE 1;
 CREATE TABLE users
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	accuracy	INTEGER,
 	family	TEXT,
 	gender	INTEGER,
@@ -14,7 +21,7 @@ CREATE TABLE users
 );
 CREATE TABLE shops
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	accuracy	INTEGER,
 	address	TEXT,
 	description	TEXT,
@@ -27,7 +34,7 @@ CREATE TABLE shops
 );
 CREATE TABLE services
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	description	TEXT,
 	duration	INTEGER,
 	photos	TEXT[10],
@@ -40,7 +47,7 @@ CREATE TABLE proficiencies
 );
 CREATE TABLE votes
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	barber	INTEGER,
 	comment	TEXT,
 	customer	INTEGER,
@@ -49,7 +56,7 @@ CREATE TABLE votes
 );
 CREATE TABLE requests
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	barber	INTEGER,
 	customer	INTEGER,
 	note	TEXT,
@@ -58,20 +65,20 @@ CREATE TABLE requests
 );
 CREATE TABLE products
 (
-	id	INTEGER,
+	id	INTEGER PRIMARY KEY,
 	description	TEXT,
 	photos	TEXT[10],
 	price	INTEGER
 );
 CREATE TABLE attributes
 (
-	title	TEXT,
+	title	TEXT PRIMARY KEY,
 	icon	TEXT,
 	type	INTEGER
 );
 CREATE TABLE translations
 (
-	id	TEXT,
+	id	TEXT PRIMARY KEY,
 	en	TEXT,
 	fa	TEXT
 );
