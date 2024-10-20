@@ -127,6 +127,8 @@ label:not([variant])
 
 label:has(i:only-child)
 {
+	background-color: var(--border);
+	cursor: pointer;
 	justify-content: center;
 	background: gold;
 }
@@ -239,7 +241,7 @@ i
 [collapse] span
 {
 	background-color: var(--foreground);
-	height: 3%;
+	height: 4%;
 	left: 35%;
 	max-width: unset;
 	position: absolute;
