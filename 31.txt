@@ -1,0 +1,6 @@
+sudo apt install kwartz-client
+
+1?B3rt@B/IJ7NXRUA56K!hIqjZWG9<
+
+sudo mount.cifs -v //192.168.10.104/a /home/m/Desktop/a -o 'user=mahdevar,pass='
+

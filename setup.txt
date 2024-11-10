@@ -1,0 +1,9 @@
+
+
+/usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+apt update
+apt install -y postgresql-common
+apt install -y postgresql
+
+
+update-alternatives --install /usr/bin/python python /usr/bin/python3.12 2

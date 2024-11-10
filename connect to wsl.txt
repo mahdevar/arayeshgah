@@ -1,0 +1,14 @@
+echo yn1FtrD12793U8x8UnPD>pass.txt
+initdb.exe --auth=password --encoding=UTF-8 --locale=en_US.UTF8 --pgdata=D:\Software\DB --pwfile=pass.txt --username=developer_user
+del pass.txt
+
+
+
+
+windows host machine:
+
+netsh interface ip add address "vEthernet (WSL)" 192.168.10.104 255.255.255.0
+
+wsl linux machine:
+
+sudo ip addr add 192.168.10.31/24 broadcast 192.168.99.255 dev eth0 label eth0:1;

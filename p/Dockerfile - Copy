@@ -1,0 +1,26 @@
+FROM alpine
+EXPOSE 5432
+
+ENV PGDATA=/var/lib/postgresql/data
+VOLUME DATA=/var/lib/postgresql/data
+RUN apk update
+RUN apk upgrade
+RUN apk add postgresql
+RUN apk add postgresql-contrib
+
+RUN mkdir /run/postgresql/
+RUN chown -R postgres:postgres /run/postgresql/
+
+USER postgres
+
+RUN initdb $PGDATA
+#COPY data $PGDATA
+#RUN pg_ctl start
+RUN chown -R postgres /var/lib/postgresql/data
+
+#RUN psql -U postgres -d postgres -c 'create user root'
+#RUN createuser --superuser root
+#RUN pg_ctl stop
+#RUN psql -d postgres --command "create user root";
+# createuser --superuser root
+CMD ["postgres"]
