@@ -1,0 +1,29 @@
+#set title = _('HOME')
+#extends "base.html"
+#block content
+
+<div id="x">A</div>
+<div id="y">B</div>
+<div id="z">B</div>
+<script>
+//alert(E('X').content);
+	E('y').innerHTML = T('USER NAME');
+	function x(a)
+	{
+
+		const {latitude, longitude, accuracy} = a.coords;
+		const c = a.coords;
+		E('x').innerHTML = E('x').innerHTML + '<br>' + `Latitude : ${c.latitude} Longitude: ${c.longitude} ${c.accuracy}`;
+		console.log(`Latitude : ${c.latitude} Longitude: ${c.longitude} ${c.accuracy} `);
+	}
+	window.navigator.geolocation.watchPosition(x, console.log, {enableHighAccuracy: true});
+
+
+
+
+E('z').innerHTML = document.getElementsByName('CSRF')[0].getAttribute('content');
+
+
+
+</script>
+#endblock content

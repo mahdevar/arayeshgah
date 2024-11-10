@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="{{_('LANGUAGE CODE')}}-{{_('COUNTRY CODE')}}" dir="{{_('TEXT DIRECTION')}}" class="{{'signed' if g.user}}">
+	<head>
+		<title>{{title}} — {{_('SITE NAME')}}</title>
+		<meta charset="UTF-8">{#<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+		<meta name="application-name" content="{{_('SITE NAME')}}">
+		<meta name="author" content="Mahdevar">
+		<meta name="color-scheme" content="light dark">
+		<meta name="theme-color" content="#333" media="(prefers-color-scheme: dark)">
+		<meta name="theme-color" content="#EEE" media="(prefers-color-scheme: light)">
+		<meta name="CSRF" content="{{CSRF}}">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		#if PAGE_METAS:
+		#for name, content in PAGE_METAS.items():
+		<meta name="{{name}}" content="{{content}}">
+		#endfor
+		#endif
+		<link rel="stylesheet" href="//fonts.googleapis.com/css2?family=Material+Symbols+Rounded&family=Roboto&family=Vazirmatn&display=swap">
+		<link rel="stylesheet" href="/file/main.css">
+		#if PAGE_STYLESHEET:
+		#for link in PAGE_STYLESHEET:
+		<link rel="stylesheet" href="{{link|safe}}">
+		#endfor
+		#endif
+		<link rel="icon" href="/file/favicon.svg" sizes="any" type="image/svg+xml">
+		<link rel="apple-touch-icon" href="/file/favicon.svg" sizes="any" type="image/svg+xml">
+		#if PAGE_LINKS:
+		#for relation, link in PAGE_LINKS.items():
+		<link rel="{{relation}}" href="{{link|safe}}">
+		#endfor
+		#endif
+{#		#if self.style():
+		#set text
+			#block style
+			#endblock style
+		#endset
+		{{'<style>\n\t\t\t'|safe + text.rstrip('\r\n').replace('\n', '\n\t\t\t') + '\n\t\t</style>'|safe}}
+		#endif
+#}		<script src="/file/{{g.language}}.js"></script>
+		<script src="/file/main.js"></script>
+		#if PAGE_LIBRARIES:
+		#for library in PAGE_LIBRARIES:
+		<script src="{{library}}"></script>
+		#endfor
+		#endif
+{#		#if self.script():
+		#set text
+			#block script
+			#endblock script
+		#endset
+		{{'<script>\n\t\t\t'|safe + text.rstrip('\r\n').replace('\n', '\n\t\t\t') + '\n\t\t</script>'|safe}}
+		#endif
+#}	</head>
+	<body>
+		#include "header.html"
+		<main>
+			<article>
+				#set text
+					#block content
+					#endblock content
+				#endset
+				{{text.rstrip('\r\n').replace('\n', '\n\t\t\t\t')}}
+			</article>
+		</main>
+		#include "footer.html"
+		<script src="/file/setup.js"></script>
+	</body>
+</html>

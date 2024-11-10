@@ -1,0 +1,113 @@
+#set title = _('ADD')
+#set PAGE_METAS = {'description': _('ADD')}
+#extends "base.html"
+#block script
+function show_all_attributes()
+{
+	var title;
+	var s = '';
+	for ([name, [type, icon, scale, priority]] of attributes)
+	{
+		title = _('A: ' + name);
+		s += '<div class="group hide wide" id="G{0}"><label for="{0}" icon="{1}"></label>'.format(name, icon);
+		switch (type)
+		{
+			case 'INTEGER':
+				s += '<input type="number" id="{0}" placeholder="{1}">'.format(name, title);
+				break;
+			case 'TEXT':
+				s += '<input type="text" id="{0}" placeholder="{1}">'.format(name, title);
+				break;
+			default:
+				s += '<section contenteditable="true" class="editable" id="{0}" placeholder="{1}"></section>'.format(name, title);
+		}
+		s += '{0}</div>'.format(scale ? '<label>' + _('SCALE: ' + scale) + '</label>' : '');
+	}
+	E('attributes').innerHTML = s;
+}
+
+function show_category_attribute(id)
+{
+	var category_attribute = find_category(id)[ATTRIBUTES];
+	for ([name, details] of attributes)
+		if (category_attribute.includes(name))
+			E('G' + name).classList.remove('hide');
+		else
+			E('G' + name).classList.add('hide');
+
+	E('T' + categories[NAME]).click();
+	E(categories[NAME]).innerHTML = _('CATEGORY: ' + id);
+	E('CATEGORY').value = id;
+}
+
+function category_button(node)
+{
+	var s = '';
+	if (node[CHILDREN].length)
+	{
+		s += '<div class="group"><button grow onclick="show_category_attribute(\'{0}\')" id="{0}">{1}</button><button toggle="CHILDREN{0}" id="T{0}"></button></div>'.format(node[NAME], _('CATEGORY: ' + node[NAME]));
+		s += '<section class="hide" aria-labelledby="{0}" id="CHILDREN{0}">'.format(node[NAME]);
+		for (child of node[CHILDREN])
+			s += category_button(child);
+		s += '</section>';
+		return s;
+	}
+	else
+	{
+		return '<div class="group"><button grow onclick="show_category_attribute(\'{0}\')">{1}</button></div>'.format(node[NAME], _('CATEGORY: ' + node[NAME]));
+	}
+}
+
+function load_image(files)
+{
+	for(var file of files)
+	{
+		var image = document.createElement('img');
+		image.src = window.URL.createObjectURL(file);
+		image.file = file;
+		image.onclick = function(){this.remove();};
+		E('images').insertBefore(image, E('add image'));
+	}
+}
+
+async function send_details()
+{
+	var i = 0;
+	var form = new FormData(E('add form'));
+	var data = new FormData();
+	E('submit').disabled = true;
+	for(let [k, v] of form)
+		if(v)
+			data.append(k, v);
+	for(let child of E('images').children)
+		if(child.file)
+			data.append('IMAGE{0}'.format(i++), child.file, child.file.name);
+
+	let response = await fetch('/add', {method: 'POST', body: data});
+	alert(response.ok);
+	E('submit').disabled = false;
+}
+
+#endblock script
+
+#block content
+<input id="image select" class="hide" onchange="load_image(this.files)" type="file" name="" multiple accept="image/*">
+<section id="categories"></section>
+<form method="post" id="add form" enctype="multipart/form-data">
+	<input type="hidden" id="CATEGORY"></input>
+	<section wide id="attributes"></section>
+	<section narrow id="images" style="grid-auto-rows: 1fr;">
+		<button type="button" id="add image" for="image select" icon="add_a_photo"></button>
+	</section>
+	<footer narrow>
+		<button type="button" id="submit" onclick="send_details()" variant="primary" icon="add_shopping_cart">{{_('ADD')}}</button>
+		<button type="reset" icon="refresh">{{_('RESET')}}</button>
+	</footer>
+</form>
+#endblock content
+
+#block setup
+E('categories').innerHTML = category_button(categories);
+show_all_attributes();
+E(categories[NAME]).click();
+#endblock setup

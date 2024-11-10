@@ -1,0 +1,112 @@
+#set title = values['NAME']
+#set PAGE_METAS = {'description': values['DESCRIPTION']}
+#set PAGE_LIBRARIES = ['https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js']
+#set PAGE_STYLESHEET = ['https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css']
+#extends "base.html"
+#block script
+function format_attributes(element, category, values)
+{
+	var category_attribute = find_category(category)[ATTRIBUTES];
+	var s = '<table>';
+	for ([name, [type, icon, scale, priority]] of attributes)
+		if (values[name] && category_attribute.includes(name))
+			s += '<tr><td icon="{1}">{2}: </td><td><strong>{3}{4}</strong></td></tr>'.format(name, icon, _('A: ' + name), values[name], scale ? ' ' + _('SCALE: ' + scale) : '');
+	s += '</table>';
+	element.innerHTML = s;
+}
+function carousel(element, images)
+{
+	var i = '';
+	if(images.length)
+	{
+		for ([id, extension] of images)
+			i += '<div class="swiper-slide"><img data-src="/file/usercontents/{0}.{1}" class="swiper-lazy"></div>'.format(id, extension );
+		element.innerHTML = '<div class="swiper-wrapper">{0}</div>'.format(i);
+		element.classList.add("swiper");
+		const swiper = new Swiper
+		(
+			element,
+			{
+				autoplay:
+				{
+					disableOnInteraction: false,
+					delay: 10000
+				},
+				centeredSlides: true,
+				centeredSlidesBounds: true,
+				centerInsufficientSlides: true,
+				init: true,
+				lazy:
+				{
+					loadPrevNext: true,
+					loadPrevNextAmount: 1
+				},
+				loop: true,
+				slidesPerView: 1,
+				spaceBetween: 0,
+				speed: parseInt(getComputedStyle(document.body).getPropertyValue('--transition')) + 1
+			}
+		);
+		swiper.on
+		(
+			'slideNextTransitionEnd',
+			function()
+			{
+				if(swiper.params.autoplay.reverseDirection)
+					swiper.params.autoplay.reverseDirection = false;
+			}
+		);
+		swiper.on
+		(
+			'slidePrevTransitionEnd',
+			function()
+			{
+				if(!swiper.params.autoplay.reverseDirection)
+				swiper.params.autoplay.reverseDirection = true;
+			}
+		);
+		element.play = swiper.autoplay;
+		window.addEventListener
+		(
+			"scroll",
+			function()
+			{
+				if(is_visible(element))
+				{
+					if(!element.play.running)
+						element.play.start();
+				}
+				else
+				{
+					if(element.play.running)
+						element.play.stop();
+				}
+			}
+		);
+	}
+}
+#endblock script
+
+#block style
+.swiper-slide > img
+{
+	width: min(50vw, 50vh);
+}
+.swiper-slide
+{
+	display: grid;
+	justify-items: center;
+}
+#endblock style
+
+#block content
+<section wide id="carousel"></section>
+<section id="content"></section> 
+#endblock content
+
+#block setup
+alert(window.location.pathname);
+
+carousel(E('carousel'), {{images|safe}});
+format_attributes(E('content'), '{{category|safe}}', {{values|safe}});
+#endblock setup

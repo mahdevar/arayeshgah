@@ -1,0 +1,11 @@
+		<footer>{# SOURCE: https://github.com/lipis/flag-icons/tree/main/flags/1x1 #}
+			{{_('FOOTER TEXT')}}
+			<div class="buttons">
+			#for language in LANGUAGES:
+				#if language != g.language:
+				<button click="set_language" parameter="{{language}}">{{_('LANGUAGE NAME', language)}}&nbsp;<img src="/file/{{language}}.svg"></button>
+				#endif
+			#endfor
+			</div>
+		</footer>
+

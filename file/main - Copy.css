@@ -1,0 +1,383 @@
+:root
+{
+	--padding: 0.5rem;
+	--font-family: "Roboto", "Vazirmatn", "Material Symbols Rounded", sans-serif;
+	--line-height: 2;
+	--border-radius: 5px;
+	--font-size: inherit;
+	--border-width: 1px;
+}
+
+:root
+{
+	--danger: #F083;
+	--highlight: #08F8;
+	--primary: #08F3;
+	--success: #0F83;
+	--danger-foreground: #802;
+	--primary-foreground: #028;
+	--success-foreground: #082;
+}
+
+@media (prefers-color-scheme: light)
+{
+	:root
+	{
+		--background: #FFFA;
+		--border: #0003;
+		--foreground: #000;
+	}
+}
+
+@media (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--background: #000A;
+		--border: #FFF3;
+		--foreground: #FFF;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference)
+{
+	:root
+	{
+		--transition: 500ms;
+	}
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	:root
+	{
+		--transition: 0ms;
+	}
+}
+
+:root
+{
+	--transition: 1000ms;
+}
+
+html
+{
+	color: var(--foreground);
+	font-family: var(--font-family);
+	font-size: var(--font-size);
+	line-height: var(--line-height);
+	overflow-wrap: break-word;
+	text-align: justify;
+}
+
+body
+{
+	margin: 0;
+	padding: 0;
+	unicode-bidi: plaintext;
+}
+
+/*Containers*/
+.boxes, .commands, article, form, section, footer, header
+{
+	display: grid;
+	gap: var(--padding);
+	grid-auto-flow: dense;
+	transition: var(--transition);
+}
+
+main
+{
+	display: grid;
+	gap: var(--padding);
+	padding: var(--padding);
+	transition: var(--transition);
+}
+
+button, label
+{
+	border: var(--border-width) solid transparent;
+	box-sizing: border-box;
+	display: flex;
+	flex: none;
+	gap: var(--padding);
+	min-width: calc(1em * var(--line-height) + 2 * var(--padding) + 2 * var(--border-width));
+	outline: none;
+	padding: var(--padding);
+	transition: var(--transition);
+}
+
+button
+{
+	align-items: center;
+	cursor: pointer;
+	font: inherit;
+	justify-content: center;
+	text-align: justify;
+}
+
+label
+{
+	white-space: nowrap;
+}
+
+label:not([variant])
+{
+	background-color: var(--border);
+}
+
+label:has(i:only-child)
+{
+	background-color: var(--border);
+	cursor: pointer;
+	justify-content: center;
+}
+
+span
+{
+	/*max-width: fit-content;*/
+}
+
+input
+{
+	background-color: transparent;
+	border: var(--border-width) solid var(--border);
+	/*box-sizing: border-box;*/
+	color: var(--foreground);
+	display: flex;
+	flex: auto;
+	font: inherit;
+	outline: none;
+	padding: var(--padding);
+	transition: var(--transition);
+	width: 0;
+}
+
+/*Main header and footer*/
+body > footer, body > header
+{
+	backdrop-filter: blur(var(--padding));
+	background-color: var(--background);
+	padding: var(--padding);
+	z-index: 999;
+}
+
+body > footer
+{
+	border-top: var(--border-width) solid var(--border);
+	/*bottom: 0;*/
+}
+
+body > header
+{
+	border-bottom: var(--border-width) solid var(--border);
+	position: sticky;
+	top: 0;
+}
+
+/*----------------------------------------------------------------------*/
+button:not([variant])
+{
+	background-color: var(--border);
+	color: var(--foreground);
+}
+
+/* WITH BACKGROUND */
+body
+{
+	background-color: var(--background);
+}
+
+/*Images*/
+img
+{
+	aspect-ratio: 1 / 1;
+}
+
+button > img
+{
+	height: 1em;
+}
+
+/* MAIN SITE HEADER */
+.shadow
+{
+	box-shadow: 0 0 var(--padding) var(--border);
+}
+
+.collapsible
+{
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height var(--transition) ease-in;
+}
+
+.hide,
+html.signed .for-quests,
+html:not(.signed) .for-users
+{
+	display: none;
+}
+
+i
+{
+	flex: none;
+	font-family: "Material Symbols Rounded", sans-serif;
+	font-feature-settings: "liga";
+	font-style: normal;
+	overflow: hidden;
+	user-select: none;
+	white-space: nowrap;
+	width: 1em;
+}
+
+[collapse]
+{
+	/*Add animation to toggle buttons*/
+	/*min-width: calc(1em * var(--line-height) + 2 * var(--padding));*/
+	position: relative;
+}
+
+[collapse] span
+{
+	background-color: var(--foreground);
+	height: 3%;
+	left: 35%;
+	max-width: unset;
+	position: absolute;
+	transition: var(--transition);
+	width: 30%;
+}
+
+[collapse] :nth-child(1)
+{
+	top: 35%;
+}
+
+[collapse] :nth-child(2)
+{
+	top: 48.5%;
+}
+
+[collapse] :nth-child(3)
+{
+	top: 48.5%;
+}
+
+[collapse] :nth-child(4)
+{
+	top: 62%;
+}
+
+[collapse].open :nth-child(1), [collapse].open :nth-child(4)
+{
+	left: 50%;
+	top: 48%;
+	width: 0;
+}
+
+[collapse].open :nth-child(2)
+{
+	transform: rotate(45deg);
+}
+
+[collapse].open :nth-child(3)
+{
+	transform: rotate(-45deg);
+}
+
+[variant="danger"]
+{
+	/*VARIANTS*/
+	background-color: var(--danger);
+	color: var(--danger-foreground);
+}
+
+[variant="primary"]
+{
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+}
+
+[variant="success"]
+{
+	background-color: var(--success);
+	color: var(--success-foreground);
+}
+
+html :disabled
+{
+	color: var(--border);
+}
+
+.group, .row
+{
+	display: flex;
+	width: 100%;
+}
+
+.fill
+{
+	flex-grow: 1;
+}
+
+.row
+{
+	gap: var(--padding);
+	/*grid-auto-flow: column;*/
+}
+
+.commands
+{
+	/*Width*/
+	grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+
+.boxes
+{
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.group:focus-within > label, .group:focus-within > button, button:focus
+{
+	background-color: var(--highlight);
+}
+
+.group:focus-within > input, input:focus
+{
+	border-color: var(--highlight);
+}
+
+/* HOVER EFFECT */
+.group:hover > label:not([disabled]), .group:hover > button:not([disabled]), button:not([disabled]):hover
+{
+	background-color: var(--highlight);
+}
+
+.group:hover > input:not([disabled]), input:not([disabled]):hover
+{
+	border-color: var(--highlight);
+}
+
+/* ROUNDED CORNERS */
+.group, :not(.group) > button, :not(.group) > input, :not(.group) > a, :not(.group) > img, :not(.group) > label
+{
+	border-radius: var(--border-radius);
+}
+
+[dir="ltr"] .group :not(:last-child), [dir="rtl"] .group :not(:first-child)
+{
+	border-right-style: hidden;
+}
+
+.group > :first-child
+{
+	border-end-start-radius: var(--border-radius);
+	border-start-start-radius: var(--border-radius);
+}
+
+.group > :last-child
+{
+	border-end-end-radius: var(--border-radius);
+	border-start-end-radius: var(--border-radius);
+}
