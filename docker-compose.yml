@@ -1,18 +1,21 @@
+name: arayeshgah
 services:
   sql:
-    container_name: postgres
-#    environment:
-#      - PGDATA=/data/postgres
-    build: ./p
+    container_name: sql
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=$SQL_USER
+      - POSTGRES_PASSWORD=$SQL_PASSWORD
+      - POSTGRES_DB=$SQL_DB
+    ports: 
+      - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - PGDATA:/sql/data
+  redis:
+    container_name: redis
+    image: redis:alpine
+    command: ["redis-server", "--requirepass $SQL_PASSWORD"]
     ports:
-      - "5332:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - 6379:6379
 volumes:
-  postgres_data:
+  PGDATA:
