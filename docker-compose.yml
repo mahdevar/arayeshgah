@@ -8,7 +8,7 @@ services:
       - POSTGRES_PASSWORD=$PASSWORD
       - POSTGRES_DB=$DB
     ports: 
-      - 5432:5432
+      - 8000:5432
     volumes:
       - PGDATA:/sql/data
   redis:
@@ -16,6 +16,6 @@ services:
     image: redis:alpine
     command: ["redis-server", "--requirepass $PASSWORD"]
     ports:
-      - 6379:6379
+      - 8001:6379
 volumes:
   PGDATA:
