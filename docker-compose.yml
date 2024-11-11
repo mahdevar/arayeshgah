@@ -4,9 +4,9 @@ services:
     container_name: sql
     image: postgres:alpine
     environment:
-      - POSTGRES_USER=$SQL_USER
-      - POSTGRES_PASSWORD=$SQL_PASSWORD
-      - POSTGRES_DB=$SQL_DB
+      - POSTGRES_USER=$USER
+      - POSTGRES_PASSWORD=$PASSWORD
+      - POSTGRES_DB=$DB
     ports: 
       - 5432:5432
     volumes:
@@ -14,7 +14,7 @@ services:
   redis:
     container_name: redis
     image: redis:alpine
-    command: ["redis-server", "--requirepass $SQL_PASSWORD"]
+    command: ["redis-server", "--requirepass $PASSWORD"]
     ports:
       - 6379:6379
 volumes:
