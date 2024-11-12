@@ -1,4 +1,3 @@
-813286120
 name: arayeshgah
 services:
   db:
@@ -26,6 +25,10 @@ services:
       - minio_data:/data
     ports:
       - 8003:9000
+  app:
+    build: .
+    ports:
+     - 8000:8000
 volumes:
   pgdata:
   minio_data:
