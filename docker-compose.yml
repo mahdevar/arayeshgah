@@ -1,18 +1,17 @@
+
 name: arayeshgah
 services:
   sql:
-    container_name: sql
     image: postgres:alpine
     environment:
-      - POSTGRES_USER=$SQL_USER
-      - POSTGRES_PASSWORD=$PASSWORD
-      - POSTGRES_DB=$DB
+      POSTGRES_USER: $SQL_USER
+      POSTGRES_PASSWORD: $PASSWORD
+      POSTGRES_DB: $DB
     ports: 
       - 8001:5432
     volumes:
-      - PGDATA:/sql/data
+      - pgdata:/var/lib/postgresql/data
   redis:
-    container_name: redis
     image: redis:alpine
     command: ["redis-server", "--requirepass $PASSWORD"]
     ports:
@@ -30,5 +29,5 @@ services:
       - 8003:9000
       - 8004:9001
 volumes:
-  PGDATA:
+  pgdata:
   minio_data:
