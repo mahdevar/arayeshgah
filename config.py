@@ -1,9 +1,35 @@
+secrets = {}
+with open('.env') as file:
+	for line in file:
+		key, value = line.rstrip('\n').split('=')
+		secrets[key] = value
+
+from functools import partial
+
+def form(cls, *parameters, **custom):
+	return partial(cls, **{parameter: secrets[parameter.upper()] for parameter in parameters} | custom)
+
+
+from psycopg2 import connect
+
+DB = form(connect, 'database', 'host', 'password', 'user')
+
+#print(load(, 'host', 'database', 'password'))
+
+e =DB(database='postgres')
+exit()
+
+DB = connect(**(sql | {'database': 'postgres', 'user': 'postgres'}))
+print(secrets)
+
+exit()
+
 pool_size = 100
 host = 'localhost'
-sql = {'host': host, 'database': 'a'}
+sql = {'host': host, 'database': secrets['DB'], 'password': secrets['PASSWORD']}
 #, 'minconn': 1, 'maxconn': pool_size
 
-redis = {'host': host}
+redis = {'host': host, 'password': secrets['PASSWORD']}
 
 
 #from utilities import Redis
@@ -26,14 +52,4 @@ csp_directives = \
 	'img-src': [],
 	'script-src': [],
 	'style-src': ['fonts.googleapis.com']
-}
-
-
-redis2 = \
-{
-	'host': '127.0.0.1',
-	'port': 6379,
-	'password': 'fgh3y9mwxglk5vp3783l',
-	#'decode_responses': true,
-	'db': 5
 }
