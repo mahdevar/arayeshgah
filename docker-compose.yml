@@ -13,7 +13,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   redis:
     image: redis:alpine
-    command: ["redis-server", "--requirepass $PASSWORD"]
+    command: redis-server --requirepass $PASSWORD
     ports:
       - 8002:6379
   minio:
@@ -22,12 +22,10 @@ services:
     environment:
       MINIO_ROOT_USER: $MINIO_USER
       MINIO_ROOT_PASSWORD: $PASSWORD
-    command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
     ports:
       - 8003:9000
-      - 8004:9001
 volumes:
   pgdata:
   minio_data:
