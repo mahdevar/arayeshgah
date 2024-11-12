@@ -1,17 +1,17 @@
-import CONFIG
+from config import sql
 from pathlib import Path
 from psycopg2 import connect
 from psycopg2.errors import DuplicateDatabase, DuplicateTable
 
-connection = connect(**(CONFIG.SQL | {'database': 'postgres'}))
+connection = connect(**(sql | {'database': 'postgres', 'user': 'postgres'}))
 connection.autocommit = True
 with connection.cursor() as cursor:
 	try:
-		cursor.execute('CREATE DATABASE %s ENCODING UTF8 TEMPLATE TEMPLATE0' % CONFIG.SQL['database'])
+		cursor.execute('CREATE DATABASE %s ENCODING UTF8' % sql['database'])
 	except DuplicateDatabase:
 		pass
 connection.close()
-with connect(**CONFIG.SQL) as connection:
+with connect(**sql) as connection:
 	connection.autocommit= True
 	with connection.cursor() as cursor:
 		for script in sorted(Path('queries').glob('*.sql')):
