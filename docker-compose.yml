@@ -1,7 +1,7 @@
-
+813286120
 name: arayeshgah
 services:
-  sql:
+  db:
     image: postgres:alpine
     environment:
       POSTGRES_USER: $SQL_USER
@@ -11,12 +11,12 @@ services:
       - 8001:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
-  redis:
+  users:
     image: redis:alpine
     command: redis-server --requirepass $PASSWORD
     ports:
       - 8002:6379
-  minio:
+  storage:
     # image: quay.io/minio/minio
     image: minio/minio
     environment:
