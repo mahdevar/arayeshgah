@@ -1,4 +1,4 @@
-__all__ = ['Containers', 'CSP_DIRECTIVES']
+__all__ = ['Containers']
 from functools import partial
 from redis import Redis as OriginalRedis
 from minio import Minio
@@ -31,15 +31,3 @@ class Containers:
 	Database = factory(ThreadedConnectionPool, 'DB')
 	Storage = factory(Minio, 'STORAGE')
 	Users = factory(Redis, 'CACHE')
-
-del S
-
-CSP_DIRECTIVES = \
-{
-	'connect-src': ['geolocation-db.com'],
-	'font-src': ['fonts.gstatic.com'],
-	'frame-ancestors': [],
-	'img-src': [],
-	'script-src': [],
-	'style-src': ['fonts.googleapis.com']
-}
