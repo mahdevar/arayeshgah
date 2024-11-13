@@ -9,4 +9,4 @@ ENV PYTHONUTF8=1
 COPY . .
 RUN pip3 install -r requirements.txt
 RUN pip3 install gunicorn
-CMD ["gunicorn", "--preload" , "--workers=9", "--threads=100", "--bind=0.0.0.0:8000", "main:app"]
+CMD ["gunicorn", "--preload" , "--workers=9", "--threads=100", "--bind=0.0.0.0:8080", "main:app"]
