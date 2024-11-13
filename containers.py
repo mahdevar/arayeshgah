@@ -1,4 +1,4 @@
-__all__ = ['Containers']
+__all__ = ['Cache', 'Database', 'Storage', 'Users']
 from functools import partial
 from redis import Redis as OriginalRedis
 from minio import Minio
@@ -25,9 +25,7 @@ class Redis(OriginalRedis):
 
 	def __setitem__(self, key, value: [float, int, str, dict]):
 		self.set(key, dumps(value))
-
-class Containers:
-	Cache = factory(Redis, 'CACHE')
-	Database = factory(ThreadedConnectionPool, 'DB')
-	Storage = factory(Minio, 'STORAGE')
-	Users = factory(Redis, 'CACHE')
+Cache = factory(Redis, 'CACHE')
+Database = factory(ThreadedConnectionPool, 'DB')
+Storage = factory(Minio, 'STORAGE')
+Users = factory(Redis, 'USERS')
