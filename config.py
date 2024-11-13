@@ -10,20 +10,24 @@ with open('.env') as file:
 		S[key] = value
 
 
-#POOL = factory(ThreadedConnectionPool, 'database', 'host',  'maxconn', 'minconn', 'password', 'user', port=8001)
+def factory(cls, *required, **custom):
+	return partial(cls, **{parameter: S[parameter.upper()] for parameter in required} | custom)
 
-#redis = Redis(host='localhost', port=6379)
 
-
-#POOL = partial(ThreadedConnectionPool, 1, 100, database=S['DB'], host=S['HOST'], password=S['PASSWORD'], port=8001)
 DB = partial(connect, database=S['DATABASE'], host=S['HOST'], password=S['PASSWORD'], port=8001, user=S['USER'])
+DB = factory(connect, 'database', 'host', 'password', 'user', port=8001)
+
+
 REDIS = partial(Redis, host=S['HOST'], password=S['PASSWORD'], port=8002)
+REDIS = factory(Redis, 'host', 'password', port=8002)
 
 
+
+POOL = factory(ThreadedConnectionPool, 'database', 'host',  'maxconn', 'minconn', 'password', 'user', port=8001)
 
 # print(load(, 'host', 'database', 'password'))
 
-e = DB(database='postgres', port=5432)
+e = DB(database='postgres')
 print(e)
 exit()
 
