@@ -2,33 +2,36 @@ name: arayeshgah
 services:
   db:
     image: postgres:alpine
+    # image: public.ecr.aws/docker/library/postgres:alpine
     environment:
-      POSTGRES_USER: $SQL_USER
+      POSTGRES_USER: $USER
       POSTGRES_PASSWORD: $PASSWORD
-      POSTGRES_DB: $DB
+      POSTGRES_DB: $DATABASE
     ports: 
-      - 8001:5432
+      - $DB_PORT:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
   users:
     image: redis:alpine
+    # image: public.ecr.aws/docker/library/redis:alpine
     command: redis-server --requirepass $PASSWORD
     ports:
-      - 8002:6379
-  storage:
-    # image: quay.io/minio/minio
+      - $USERS_PORT:6379
+  files:
     image: minio/minio
+    # image: quay.io/minio/minio
+    # image: public.ecr.aws/bitnami/minio
     environment:
       MINIO_ROOT_USER: $MINIO_USER
       MINIO_ROOT_PASSWORD: $PASSWORD
     volumes:
       - minio_data:/data
     ports:
-      - 8003:9000
+      - $FILES_PORT:9000
   app:
     build: .
     ports:
-     - 8000:8000
+     - $APP_PORT:8000
 volumes:
   pgdata:
   minio_data:

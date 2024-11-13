@@ -6,8 +6,11 @@ from redis import Redis
 S = {}
 with open('.env') as file:
 	for line in file:
-		key, value = line.rstrip('\n').split('=')
-		S[key] = value
+		line = line.rstrip('\n\r')
+		print(line)
+		if line:
+			key, value = line.split('=')
+			S[key] = value
 
 
 def factory(cls, *required, **custom):
