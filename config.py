@@ -1,35 +1,32 @@
+__all__ = ['DB', 'CACHE', 'STORAGE', 'USERS']
+
 from functools import partial
-from psycopg2 import connect
+from minio import Minio
 from psycopg2.pool import ThreadedConnectionPool
 from redis import Redis
 
 S = {}
 with open('.env') as file:
 	for line in file:
-		line = line.rstrip('\n\r')
+		line = line.rstrip()
 		print(line)
 		if line:
 			key, value = line.split('=')
 			S[key] = value
 
 
-def factory(cls, *required, **custom):
-	return partial(cls, **{parameter: S[parameter.upper()] for parameter in required} | custom)
+def factory(cls, prefix, **custom):
+	return partial(cls, **{secret[len(prefix) + 1:].lower(): S[secret] for secret in S if secret.startswith(prefix)} | custom)
 
+DB = factory(ThreadedConnectionPool, 'SQL')
+CACHE = factory(Redis, 'CACHE')
+STORAGE = factory(Minio, 'STORAGE')
+USERS = factory(Redis, 'CACHE')
 
-DB = partial(connect, database=S['DATABASE'], host=S['HOST'], password=S['PASSWORD'], port=8001, user=S['USER'])
-DB = factory(connect, 'database', 'host', 'password', 'user', port=8001)
-
-
-REDIS = partial(Redis, host=S['HOST'], password=S['PASSWORD'], port=8002)
-REDIS = factory(Redis, 'host', 'password', port=8002)
-
-
-
-POOL = factory(ThreadedConnectionPool, 'database', 'host',  'maxconn', 'minconn', 'password', 'user', port=8001)
+# POOL = factory(ThreadedConnectionPool, 'database', 'host',  'maxconn', 'minconn', 'password', 'user', port=8001)
 
 # print(load(, 'host', 'database', 'password'))
-
+'''
 e = DB(database='postgres')
 print(e)
 exit()
@@ -67,3 +64,4 @@ csp_directives = \
 		'script-src': [],
 		'style-src': ['fonts.googleapis.com']
 	}
+'''
