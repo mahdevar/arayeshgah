@@ -12,7 +12,7 @@ jobs:
           echo "${{secrets.PRIVATE_KEY}}" > ~/.ssh/id_ed25519
           sudo chmod 600 ~/.ssh/id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > ~/.ssh/known_hosts
-          ssh "${{secrets.USER}}"@"${{secrets.SERVER}}"
-          mkdir aaaaaa
+          ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}"
+          mkdir ~/ghasem/aaaaaa
           echo "Successfully pulled repo."
         shell: bash
