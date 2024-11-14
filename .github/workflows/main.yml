@@ -1,4 +1,4 @@
-name: Deploy 🚀
+]name: Deploy 🚀
 on: [push]
 jobs:
   deploy:
@@ -8,8 +8,8 @@ jobs:
         run: |
           mkdir ~/.ssh
           cd ~/.ssh
-          echo "${{secrets.PRIVATE_KEY}}" > key
-          sudo chmod 600 key
+          echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
+          sudo chmod 600 id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
           ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}" "mkdir /home/ghasem/aaaaaa && whoami"
           echo "Successfully pulled repo."
