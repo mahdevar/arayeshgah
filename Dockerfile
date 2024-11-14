@@ -1,6 +1,6 @@
 #FROM python:alpine
 FROM public.ecr.aws/docker/library/python:alpine
-EXPOSE 8000
+EXPOSE 8080
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
