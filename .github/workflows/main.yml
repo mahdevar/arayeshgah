@@ -6,6 +6,7 @@ jobs:
     steps:
       - name: SSH Deploy
         run: |
+          sudo su
           mkdir ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > ~/.ssh/id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > ~/.ssh/known_hosts
