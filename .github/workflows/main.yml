@@ -6,8 +6,8 @@ jobs:
     steps:
       - name: SSH Deploy
         run: |
-          mkdir .ssh
-          cd .ssh
+          mkdir ~/.ssh
+          cd ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > key
           sudo chmod 600 key
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
