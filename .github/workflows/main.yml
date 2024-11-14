@@ -2,7 +2,7 @@ name: Deploy 🚀
 on: [push]
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
     steps:
       - name: SSH Deploy
         run: |
