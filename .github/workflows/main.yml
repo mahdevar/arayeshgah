@@ -13,6 +13,6 @@ jobs:
           sudo chmod 600 ~/.ssh/id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > ~/.ssh/known_hosts
           ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}"
-          mkdir ~/ghasem/aaaaaa
+          mkdir /home/ghasem/aaaaaa
           echo "Successfully pulled repo."
         shell: bash
