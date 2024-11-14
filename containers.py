@@ -12,7 +12,6 @@ with open('.env') as file:
 		if line:
 			key, value = line.split('=')
 			S[key] = value
-
 S['STORAGE_ENDPOINT'] += ':' + S['STORAGE_PORT']  
 del S['STORAGE_PORT']
 
