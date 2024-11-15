@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
 
     before:
-      run: mkdir ~/.ssh
+        id: import-secrets
 
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
