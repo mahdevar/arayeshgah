@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: ساخت پوشه
         run: |
-          mkdir $working-directory
+          sudo mkdir $working-directory
       - name: نوشتن کلیدها
         run: |
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
