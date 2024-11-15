@@ -3,15 +3,13 @@ on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ~/.ssh
     steps:
       - name: ساخت پوشه
         run: |
-          sudo mkdir -p ~/.ssh
+          sudo mkdir ~/.ssh
       - name: نوشتن کلیدها
         run: |
+          cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
