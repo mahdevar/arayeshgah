@@ -1,10 +1,10 @@
 name: ساخت دوباره
 on: [push]
 jobs:
-  deploy:
+  به روز رسانی نرم افزار:
     runs-on: ubuntu-latest
     steps:
-      - name: ساخت پوشه
+      - name: ساخت پوشه‌ای برای نوشتن کلیدها
         run: |
           mkdir ~/.ssh
           chmod 0700 ~/.ssh
