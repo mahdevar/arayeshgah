@@ -12,9 +12,9 @@ jobs:
       - name: نوشتن کلیدها
         run: |
           cd  ~/.ssh
-          echo ${{secrets.PRIVATE_KEY}} > id_ed25519
+          echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
-          echo ${{secrets.KNOWN_HOSTS}} > known_hosts
+          echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
         run: |
