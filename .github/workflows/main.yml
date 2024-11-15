@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ~/.ssh
+        working-directory: /home/runner/.ssh
     steps:
       - name: نوشتن کلیدها
         run: |
