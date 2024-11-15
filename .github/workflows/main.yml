@@ -1,10 +1,11 @@
-name: ساخت دباره
+name: ساخت دوباره
 on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      folder: ~/.ssh
+    defaults:
+      run:
+        working-directory: ~/.ssh
     steps:
       - name: ساخت پوشه‌ای برای گذاشتن کلید‌ها
         run: |
