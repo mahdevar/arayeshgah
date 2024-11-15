@@ -1,35 +1,26 @@
 name: ساخت دوباره
 on: [push]
 jobs:
-  prepare:
+  deploy:
+    name: به روز رسانی نرم افزار
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
         run: |
           mkdir ~/.ssh
           chmod 700 ~/.ssh
-
-
-  deploy:
-    name: به روز رسانی نرم افزار
-    runs-on: ubuntu-latest
-    needs: prepare
-    defaults:
-      run:
-        working-directory: ~/.ssh
-
-    steps:
+          
       - name: نوشتن کلید پنهان
         run: |
-          pwd
+          cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
-          pwd
+          cd  ~/.ssh
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
         run: |
-          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && git pull"
+          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "${{secrets.APP_FOLDER}}/rebuild.sh"
