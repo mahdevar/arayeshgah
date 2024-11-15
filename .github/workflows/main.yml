@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
-        run: mkdir -m 700 ~/.ssh
+        run: |
+          mkdir ~/.ssh
+          chmod 700 ~/.ssh
           
       - name: نوشتن کلید پنهان
         run: |
@@ -22,5 +24,3 @@ jobs:
       - name: پیوستن به دستگاه پایانی
         run: |
           ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && git pull"
-          pwd
-          ls
