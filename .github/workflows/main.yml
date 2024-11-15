@@ -22,4 +22,7 @@ jobs:
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
-        run: ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && ./rebuild.sh"
+        run: |
+          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && bash rebuild.sh"
+          pwd
+          ls
