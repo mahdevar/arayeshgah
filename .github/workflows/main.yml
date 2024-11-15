@@ -1,31 +1,32 @@
 name: ساخت دوباره
 on: [push]
 jobs:
-  deploy:
-    name: به روز رسانی نرم افزار
+  prepare:
     runs-on: ubuntu-latest
-
-    before:
-        id: import-secrets
-
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
         run: |
-          pwd
           mkdir ~/.ssh
           chmod 700 ~/.ssh
-          
+
+
+  deploy:
+    name: به روز رسانی نرم افزار
+    needs: prepare
+    defaults:
+      run:
+        working-directory: ~/.ssh
+
+    steps:
       - name: نوشتن کلید پنهان
         run: |
           pwd
-          cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
           pwd
-          cd  ~/.ssh
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
