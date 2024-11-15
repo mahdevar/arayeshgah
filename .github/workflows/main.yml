@@ -7,8 +7,7 @@ jobs:
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
         run: |
-          mkdir ~/.ssh
-          chmod 0700 ~/.ssh
+          mkdir -m 700 ~/.ssh
           
       - name: نوشتن کلیدها
         run: |
