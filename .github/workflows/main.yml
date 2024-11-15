@@ -3,11 +3,14 @@ on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ~/.shh
     steps:
       - name: ساخت پوشه‌ای برای گذاشتن کلید‌ها
         run: |
-          mkdir ~/.ssh
-          cd ~/.ssh
+          mkdir $working-directory
+          cd $working-directory
       - name: نوشتن کلیدها
         run: |
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
