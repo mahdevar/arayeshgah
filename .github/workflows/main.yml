@@ -8,13 +8,12 @@ jobs:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
         run: |
           mkdir ~/.ssh
-          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh
 
       - name: نوشتن کلید پنهان
         run: |
           cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
-          chmod 600 id_ed25519
 
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
