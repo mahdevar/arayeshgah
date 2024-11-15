@@ -6,8 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
-        run: |
-          mkdir -m 700 ~/.ssh
+        run: mkdir -m 700 ~/.ssh
           
       - name: نوشتن کلیدها
         run: |
