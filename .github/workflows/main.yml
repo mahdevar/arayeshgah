@@ -18,4 +18,4 @@ jobs:
 
       - name: پیوستن به دستگاه پایانی
         run: |
-          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "mkdir /home/ghasem/aaaaaa && whoami"
+          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "rebuild.sh"
