@@ -5,11 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /home/runner/.ssh
+        working-directory: ~/.ssh
     steps:
       - name: ساخت پوشه
         run: |
-          sudo mkdir -p $working-directory
+          sudo mkdir -p ~/.ssh
       - name: نوشتن کلیدها
         run: |
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
