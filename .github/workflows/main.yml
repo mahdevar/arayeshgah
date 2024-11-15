@@ -7,7 +7,6 @@ jobs:
       run:
         working-directory: ~/.ssh
     steps:
-      - name: ساخت پوشه‌ای برای گذاشتن کلید‌ها
       - name: نوشتن کلیدها
         run: |
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
