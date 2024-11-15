@@ -1,15 +1,19 @@
-name: Deploy 🚀
+name: ساخت دباره
 on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH Deploy
+      - name: ساخت پوشه‌ای برای گذاشتن کلید‌ها
         run: |
           mkdir ~/.ssh
           cd ~/.ssh
+      - name: نوشتن کلیدها
+        run: |
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
+      - name: پیوستن به دستگاه پایانی
+        run: |
           ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}" "mkdir /home/ghasem/aaaaaa && whoami"
           echo "Successfully pulled repo."
