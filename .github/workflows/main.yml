@@ -1,23 +1,26 @@
 name: ساخت دوباره
-on: [ push ]
+on: [push]
 jobs:
   deploy:
     name: به روز رسانی نرم افزار
     runs-on: ubuntu-latest
+    environment:
+      SSH: ~/.ssh
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
         run: |
-          mkdir ~/.ssh
-          chmod 600 ~/.ssh
+          mkdir $SSH
+          chmod 600 $SSH
 
       - name: نوشتن کلید پنهان
         run: |
-          cd  ~/.ssh
+          cd  $SSH
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
+          chmod 600 id_ed25519
 
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
-          cd  ~/.ssh
+          cd  $SSH
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
