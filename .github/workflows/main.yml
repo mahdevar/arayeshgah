@@ -22,3 +22,5 @@ jobs:
       - name: پیوستن به دستگاه پایانی
         run: |
           ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && git pull"
+          pwd
+          ls
