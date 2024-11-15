@@ -4,7 +4,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      folder: ~/.shh
+      folder: ~/.ssh
     steps:
       - name: ساخت پوشه‌ای برای گذاشتن کلید‌ها
         run: |
