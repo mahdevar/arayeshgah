@@ -7,6 +7,7 @@ jobs:
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
         run: |
+          pwd
           mkdir ~/.ssh
           chmod 700 ~/.ssh
           
