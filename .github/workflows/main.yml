@@ -1,5 +1,5 @@
 name: ساخت دوباره
-on: [push]
+on: [ push ]
 jobs:
   deploy:
     name: به روز رسانی نرم افزار
@@ -9,13 +9,13 @@ jobs:
         run: |
           mkdir ~/.ssh
           chmod 700 ~/.ssh
-          
+
       - name: نوشتن کلید پنهان
         run: |
           cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
-          sudo chmod 600 id_ed25519
-          
+          chmod 600 id_ed25519
+
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
           cd  ~/.ssh
@@ -24,5 +24,3 @@ jobs:
       - name: پیوستن به دستگاه پایانی
         run: |
           ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && bash rebuild.sh"
-          pwd
-          ls
