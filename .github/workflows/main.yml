@@ -1,7 +1,8 @@
 name: ساخت دوباره
 on: [push]
 jobs:
-  به روز رسانی نرم افزار:
+  deploy:
+    name: به روز رسانی نرم افزار
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
