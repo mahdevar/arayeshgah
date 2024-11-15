@@ -6,15 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
-        run: mkdir -m 700 ~/.ssh
+        run: mkdir -m 600 ~/.ssh
           
       - name: نوشتن کلیدها
         run: |
           cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
-          sudo chmod 600 id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
-
       - name: پیوستن به دستگاه پایانی
         run: |
           ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && git pull"
