@@ -12,6 +12,7 @@ jobs:
 
   deploy:
     name: به روز رسانی نرم افزار
+    runs-on: ubuntu-latest
     needs: prepare
     defaults:
       run:
