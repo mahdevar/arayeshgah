@@ -3,7 +3,7 @@ on: [push]
 jobs:
   deploy:
     name: به روز رسانی نرم افزار
-    runs-on: ubuntu-latest
+    runs-on: ubuntu
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
         run: |
@@ -16,6 +16,7 @@ jobs:
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
+
       - name: پیوستن به دستگاه پایانی
         run: |
           ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}" "mkdir /home/ghasem/aaaaaa && whoami"
