@@ -3,7 +3,7 @@ on: [push]
 jobs:
   deploy:
     name: به روز رسانی نرم افزار
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلیدها
         run: |
