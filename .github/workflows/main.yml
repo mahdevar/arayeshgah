@@ -17,4 +17,4 @@ jobs:
 
       - name: پیوستن به دستگاه پایانی
         run: |
-          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "./rebuild.sh"
+          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && ./rebuild.sh"
