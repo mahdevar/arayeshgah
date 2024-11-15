@@ -13,12 +13,14 @@ jobs:
           
       - name: نوشتن کلید پنهان
         run: |
+          pwd
           cd  ~/.ssh
           echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           sudo chmod 600 id_ed25519
           
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
+          pwd
           cd  ~/.ssh
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
