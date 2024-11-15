@@ -13,4 +13,3 @@ jobs:
           echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
           ssh -p "${{secrets.PORT}}" "${{secrets.USER}}"@"${{secrets.SERVER}}" "mkdir /home/ghasem/aaaaaa && whoami"
           echo "Successfully pulled repo."
-        shell: bash
