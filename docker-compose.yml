@@ -7,6 +7,8 @@ services:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_DATABASE
+    networks:
+      - private
     ports: 
       - $DB_PORT:5432
     volumes:
@@ -16,6 +18,8 @@ services:
     # image: redis:alpine
     image: public.ecr.aws/docker/library/redis:alpine
     command: redis-server --requirepass $USERS_PASSWORD
+    networks:
+      - private
     ports:
       - $USERS_PORT:6379
 
@@ -23,6 +27,8 @@ services:
     # image: redis:alpine
     image: public.ecr.aws/docker/library/redis:alpine
     command: redis-server --requirepass $CACHE_PASSWORD
+    networks:
+      - private
     ports:
       - $CACHE_PORT:6379
 
@@ -35,6 +41,9 @@ services:
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
     volumes:
       - minio_data:/data
+    networks:
+      - private
+      - public
     ports:
       - $STORAGE_PORT:9000
 
@@ -45,3 +54,9 @@ services:
 volumes:
   pgdata:
   minio_data:
+
+networks:
+  public:
+    internal: false
+  private:
+    internal: true
