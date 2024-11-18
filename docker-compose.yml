@@ -7,24 +7,24 @@ services:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_DATABASE
-    ports: 
-      - $DB_PORT:5432
+    expose: 
+      - 5432
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
   users:
     image: redis:alpine
     # image: public.ecr.aws/docker/library/redis:alpine
-    command: redis-server --requirepass $USERS_PASSWORD --port $USERS_PORT
-    ports:
-      - $USERS_PORT
+    command: redis-server --requirepass $USERS_PASSWORD --port 5000
+    expose:
+      - 5000
 
   cache:
     image: redis:alpine
     # image: public.ecr.aws/docker/library/redis:alpine
-    command: redis-server --requirepass $CACHE_PASSWORD --port $CACHE_PORT
+    command: redis-server --requirepass $CACHE_PASSWORD --port 5001
     ports:
-      - $CACHE_PORT
+      - 5001
 
   storage:
     image: minio/minio
@@ -35,8 +35,8 @@ services:
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
     volumes:
       - minio_data:/data
-    ports:
-      - $STORAGE_PORT:9000
+    expose:
+      - 9000
 
   app:
     depends_on:
