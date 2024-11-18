@@ -14,6 +14,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
+
+  
+  
+  
   users:
     # image: redis:alpine
     image: public.ecr.aws/docker/library/redis:alpine
