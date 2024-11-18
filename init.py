@@ -1,28 +1,31 @@
-from config import sql
-from pathlib import Path
-from psycopg2 import connect
-from psycopg2.errors import DuplicateDatabase, DuplicateTable
+from psycopg2.extras import RealDictCursor
+from containers import Cache, Database 
+from json import dumps, loads
 
-connection = connect(**(sql | {'database': 'postgres', 'user': 'postgres'}))
-connection.autocommit = True
-with connection.cursor() as cursor:
-	try:
-		cursor.execute('CREATE DATABASE %s ENCODING UTF8' % sql['database'])
-	except DuplicateDatabase:
-		pass
-connection.close()
-with connect(**sql) as connection:
-	connection.autocommit= True
-	with connection.cursor() as cursor:
-		for script in sorted(Path('queries').glob('*.sql')):
-			print('Executing: ' + script.name)
-			for query in script.read_text(encoding='utf-8').split(';'):
-				query = query.strip()
-				if query:
-					try:
-						cursor.execute(query)
-					except DuplicateTable:
-						pass
-					finally:
-						connection.commit()
-	connection.commit()
+
+
+to_json = lambda data: '{}' if data is None else dumps(data, ensure_ascii=False, separators=(',', ':'))
+
+DB = Database()
+
+TRANSLATIONS = Cache()
+
+CONNECTION = DB.getconn()
+CURSOR = CONNECTION.cursor(cursor_factory=RealDictCursor)
+CURSOR.execute('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'')
+
+
+
+for language in [value for value in CURSOR.fetchone().values() if value != 'LANGUAGE CODE']:
+	print('>>', language)
+
+'''
+	CURSOR.execute('SELECT id, %s FROM translations' % language)
+	TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in CURSOR.fetchall()]}
+	for language, translation in TRANSLATIONS.items():
+		with open('./file/%s.js' % language, 'w', encoding='utf-8') as file:
+			print('document.translation = %s;' % to_json(translation), file=file)
+	G['LANGUAGES'] = TRANSLATIONS.keys()
+	POOL.putconn(g.connection)
+
+'''
