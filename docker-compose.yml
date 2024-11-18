@@ -1,66 +1,52 @@
 name: arayeshgah
 services:
   db:
-    # image: postgres:alpine
-    image: public.ecr.aws/docker/library/postgres:alpine
+    image: postgres:alpine
+    # image: public.ecr.aws/docker/library/postgres:alpine
     environment:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_DATABASE
-    networks:
-      - private
     ports: 
       - $DB_PORT:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
-
-  
-  
-  
   users:
-    # image: redis:alpine
-    image: public.ecr.aws/docker/library/redis:alpine
-    command: redis-server --requirepass $USERS_PASSWORD
-    networks:
-      - private
+    image: redis:alpine
+    # image: public.ecr.aws/docker/library/redis:alpine
+    command: redis-server --requirepass $USERS_PASSWORD --port $USERS_PORT
     ports:
-      - $USERS_PORT:6379
+      - $USERS_PORT
 
   cache:
-    # image: redis:alpine
-    image: public.ecr.aws/docker/library/redis:alpine
-    command: redis-server --requirepass $CACHE_PASSWORD
-    networks:
-      - private
+    image: redis:alpine
+    # image: public.ecr.aws/docker/library/redis:alpine
+    command: redis-server --requirepass $CACHE_PASSWORD --port $CACHE_PORT
     ports:
-      - $CACHE_PORT:6379
+      - $CACHE_PORT
 
   storage:
-    # image: minio/minio
-    image: public.ecr.aws/bitnami/minio
+    image: minio/minio
+    # image: public.ecr.aws/bitnami/minio
     # image: quay.io/minio/minio
     environment:
       MINIO_ROOT_USER: $STORAGE_ACCESS_KEY
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
     volumes:
       - minio_data:/data
-    networks:
-      - private
-      - public
     ports:
       - $STORAGE_PORT:9000
 
   app:
+    depends_on:
+      - db
+      - users
+      - cache
+      - storage
     build: .
     ports:
-     - $APP_PORT:5000
+     - $APP_PORT:8080
 volumes:
   pgdata:
   minio_data:
-
-networks:
-  public:
-    internal: false
-  private:
-    internal: true
