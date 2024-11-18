@@ -1,3 +1,5 @@
+__all__ = ['CSP']
+
 CSP_DIRECTIVES = \
 {
 	'connect-src': ['geolocation-db.com'],
@@ -7,3 +9,6 @@ CSP_DIRECTIVES = \
 	'script-src': [],
 	'style-src': ['fonts.googleapis.com']
 }
+
+
+CSP = 'default-src \'none\'; ' + ' '.join('%s %s;' % (name, ' '.join(['\'self\''] + value)) for name, value in CSP_DIRECTIVES.items())
