@@ -90,7 +90,6 @@ ALLOWED_INACTIVITY = 6 * 60
 # Initialize
 TRANSLATIONS = {}
 
-from utilities import USERS
 #exit()
 print('>>>>>>>>>>>>>PID:', getpid())
 POOL = None
