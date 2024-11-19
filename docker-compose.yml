@@ -1,8 +1,8 @@
 name: arayeshgah
 services:
   cache:
-    image: redis:alpine
-    # image: public.ecr.aws/docker/library/redis:alpine
+    #image: redis:alpine
+    image: public.ecr.aws/docker/library/redis:alpine
     command: redis-server --requirepass $CACHE_PASSWORD
     healthcheck:
       test: redis-cli ping
@@ -10,8 +10,8 @@ services:
       - $CACHE_PORT:6379
 
   db:
-    image: postgres:alpine
-    # image: public.ecr.aws/docker/library/postgres:alpine
+    #image: postgres:alpine
+    image: public.ecr.aws/docker/library/postgres:alpine
     environment:
       POSTGRES_DB: $DB_DATABASE
       POSTGRES_PASSWORD: $DB_PASSWORD
@@ -25,10 +25,9 @@ services:
       - ./queries:/docker-entrypoint-initdb.d
 
   storage:
-    image: minio/minio
-    # image: public.ecr.aws/bitnami/minio
-    # image: quay.io/minio/minio
-    command: server --address ":9000" /data
+    #image: minio/minio
+    image: public.ecr.aws/bitnami/minio
+    #image: quay.io/minio/minio
     environment:
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
       MINIO_ROOT_USER: $STORAGE_ACCESS_KEY
@@ -40,8 +39,8 @@ services:
       - $STORAGE_PORT:9000
 
   session:
-    image: redis:alpine
-    # image: public.ecr.aws/docker/library/redis:alpine
+    #image: redis:alpine
+    image: public.ecr.aws/docker/library/redis:alpine
     command: redis-server --requirepass $SESSION_PASSWORD
     healthcheck:
       test: redis-cli ping

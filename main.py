@@ -1,3 +1,14 @@
+from redis import Redis
+#m = Redis()
+#m.keys()
+from containers import Cache
+c = Cache()
+for i in c.keys():
+	print(i)
+
+
+exit()
+
 from atexit import register as run_at_exit
 from base64 import b32hexencode
 from functools import wraps
