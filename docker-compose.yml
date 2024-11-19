@@ -28,11 +28,14 @@ services:
     image: minio/minio
     # image: public.ecr.aws/bitnami/minio
     # image: quay.io/minio/minio
+    command: server --address ":9000" /data
     environment:
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
       MINIO_ROOT_USER: $STORAGE_ACCESS_KEY
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: curl -k -f localhost:9000/minio/health/live || exit 1
     ports:
       - $STORAGE_PORT:9000
 
@@ -53,7 +56,7 @@ services:
       db:
         condition: service_healthy
       storage:
-        condition: service_started
+        condition: service_healthy
       session:
         condition: service_healthy
     ports:
