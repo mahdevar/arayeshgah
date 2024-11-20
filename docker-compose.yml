@@ -17,7 +17,7 @@ services:
     healthcheck:
       test: pg_isready
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - tables:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
 
   storage:
@@ -28,7 +28,7 @@ services:
       MINIO_ROOT_PASSWORD: $STORAGE_SECRET_KEY
       MINIO_ROOT_USER: $STORAGE_ACCESS_KEY
     volumes:
-      - minio_data:/data
+      - files:/data
     healthcheck:
       test: curl -k -f localhost:9000/minio/health/live || exit 1
 
@@ -56,14 +56,9 @@ services:
     #    condition: service_healthy
     ports:
      - $COMPOSE_PROJECT_PORT:8080
-    volumes:
-      - minio_data:/data
-
-    
-    
 volumes:
-  pgdata:
-  minio_data:
+  files:
+  tables:
 
 networks:
   default:
