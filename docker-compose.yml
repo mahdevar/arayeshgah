@@ -6,8 +6,6 @@ services:
     command: redis-server --requirepass $CACHE_PASSWORD
     healthcheck:
       test: redis-cli ping
-    ports:
-      - $CACHE_PORT:6379
 
   db:
     #image: postgres:alpine
@@ -18,8 +16,6 @@ services:
       POSTGRES_USER: $DB_USER
     healthcheck:
       test: pg_isready
-    ports:
-      - $DB_PORT:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
@@ -44,8 +40,10 @@ services:
     command: redis-server --requirepass $SESSION_PASSWORD
     healthcheck:
       test: redis-cli ping
-    ports:
-      - $SESSION_PORT:6379
+
+
+
+
 
   app:
     build: .
@@ -54,8 +52,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
-      storage:
-        condition: service_healthy
+    #  storage:
+    #    condition: service_healthy
       session:
         condition: service_healthy
     ports:
@@ -64,3 +62,8 @@ services:
 volumes:
   pgdata:
   minio_data:
+
+networks:
+  default:
+    driver: bridge
+    name: $COMPOSE_PROJECT_NAME-NETWORK
