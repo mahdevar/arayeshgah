@@ -31,8 +31,6 @@ services:
       - minio_data:/data
     healthcheck:
       test: curl -k -f localhost:9000/minio/health/live || exit 1
-    ports:
-      - $STORAGE_PORT:9000
 
   session:
     #image: redis:alpine
@@ -48,17 +46,21 @@ services:
   app:
     build: .
     depends_on:
-      cache:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-    #  storage:
+    #  cache:
     #    condition: service_healthy
-      session:
+    #  db:
+    #    condition: service_healthy
+      storage:
         condition: service_healthy
+    #  session:
+    #    condition: service_healthy
     ports:
      - $COMPOSE_PROJECT_PORT:8080
+    volumes:
+      - minio_data:/data
 
+    
+    
 volumes:
   pgdata:
   minio_data:
@@ -66,4 +68,4 @@ volumes:
 networks:
   default:
     driver: bridge
-    name: $COMPOSE_PROJECT_NAME-NETWORK
+    name: $COMPOSE_PROJECT_NAME-BRIDGE

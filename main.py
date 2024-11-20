@@ -1,10 +1,21 @@
-from redis import Redis
-#m = Redis()
-#m.keys()
-from containers import Cache
-c = Cache()
-for i in c.keys():
-	print(i)
+#from containers import Cache
+from containers import Storage
+s = Storage()
+
+#s.make_bucket('data')
+f = '/mnt/d/Download/DNS.bat'
+with open(f,'rb') as f1:
+	with open('/data/file','wb') as f2:
+		while True:
+			b=f1.read(1)
+			print(b)
+			if b: 
+				n=f2.write(b)
+			else:
+				break
+
+s.fput_object('data', 'a', '/data/file')
+
 
 
 exit()
@@ -23,7 +34,7 @@ from time import time
 from jdatetime import datetime as jdt, j_days_in_month
 from flask import abort, Flask, g, render_template, request, send_file
 from flask.wrappers import Response
-#from minio import Minio
+from minio import Minio
 from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import ThreadedConnectionPool as CreatePool
@@ -36,7 +47,8 @@ from datetime import datetime
 
 #from pickle import dumps, loads
 
-#minio = Minio(**MINIO_CONFIG)
+minio = Minio(**MINIO_CONFIG)
+minio.make_bucket('data')
 #minio_ = minio.fput_object('data', 'a', 'D:\\Download\\windowsdesktop-runtime-8.0.8-win-x64.exe')
 #minio_ = minio.fput_object('data', 'b', 'D:\\Download\\vidisco\\Vidisco ADMINISTRATION.rar')
 #exit()
