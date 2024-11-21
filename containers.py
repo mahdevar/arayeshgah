@@ -1,5 +1,6 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
+from annotation import Class, Number, String
 from functools import partial
 from json import dumps, loads
 from minio import Minio
@@ -13,11 +14,9 @@ with open('.env') as file:
 		if line:
 			key, value = line.split('=')
 			S[key] = value
-S['STORAGE_ENDPOINT'] += ':' + S['STORAGE_PORT']
-del S['STORAGE_PORT']
 
 
-def factory(cls, prefix, **custom):
+def factory(cls: Class, prefix: String, **custom: Number | String) -> Class:
 	return partial(cls, **{secret[len(prefix) + 1:].lower(): S[secret] for secret in S if secret.startswith(prefix)} | custom)
 
 
