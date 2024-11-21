@@ -10,8 +10,8 @@ COPY . .
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 RUN pip3 install gunicorn
-RUN export CPUs=`expr $(nproc) \* 2 + 1000`
-RUN echo $CPUs
+#RUN export CPUs=`expr $(nproc) \* 2 + 1000`
+#RUN echo $CPUs
 #RUN python3 init.py
-ENV P=$(( 2 * `nproc` + 1 ))
+#ENV P=$(( 2 * `nproc` + 1 ))
 CMD gunicorn --preload --workers=9 --threads=100 --bind=0.0.0.0:8080 main:app
