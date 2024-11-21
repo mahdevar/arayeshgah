@@ -1,5 +1,5 @@
-FROM python:alpine
-#FROM public.ecr.aws/docker/library/python:alpine
+#FROM python:alpine
+FROM public.ecr.aws/docker/library/python:alpine
 EXPOSE 8080
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
