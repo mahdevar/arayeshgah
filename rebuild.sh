@@ -1,4 +1,3 @@
 #!/bin/bash
-
 git pull
-docker compose up --detach app
+docker compose up --detach --force-recreate app
