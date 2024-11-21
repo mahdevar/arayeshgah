@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONUTF8=1
 #COPY requirements.txt requirements.txt
 COPY . .
+RUN cat /etc/resolv.conf
 RUN pip3 install --upgrade pip
 RUN pip3 install --requirement requirements.txt
 RUN pip3 install gunicorn
