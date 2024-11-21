@@ -1,8 +1,8 @@
-__all__ = ['Class', 'Dictionary', 'Number', 'String', 'TypeVar']
+__all__ = ['Any', 'Class', 'Dictionary', 'Number', 'String', 'TypeVar']
 
-from typing import Callable, TypeVar
+from typing import Any, Callable, TypeVar
 
 Class = TypeVar('Class', bound=Callable)
 Dictionary = dict
-Number = float
+Number = float | int
 String = str
