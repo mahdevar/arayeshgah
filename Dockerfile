@@ -5,7 +5,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONUTF8=1
-RUN export CPUs=`expr $(nproc) \* 2 + 1` 
+RUN export CPUs=`expr $(nproc) \* 2 + 1`
 RUN echo $CPUs
 #COPY requirements.txt requirements.txt
 COPY . .
