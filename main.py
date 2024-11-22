@@ -1,21 +1,34 @@
-#from containers import Cache
-from containers import Storage
+from containers import Cache
+from containers import Storage, Session
+from os import system
 s = Storage()
+#import init
+#RUN python3 init.py
 
-#s.make_bucket('data')
-f = '/mnt/d/Download/DNS.bat'
-with open(f,'rb') as f1:
-	with open('/data/file','wb') as f2:
-		while True:
-			b=f1.read(1)
-			print(b)
-			if b: 
-				n=f2.write(b)
-			else:
-				break
+d = Cache()
 
-s.fput_object('data', 'a', '/data/file')
+e = Session()
+for k in d.keys():
+	print('<<<<<<<<<<<<<<<<<<<<', k)
 
+d['a'] = 4
+
+print('/................', d['a'])
+from flask import abort, Flask, g, render_template, request, send_file
+
+app = Flask(__name__, static_folder='file')
+
+@app.route('/index')
+@app.route('/')
+def home():
+	return render_template('home.html')
+
+print('YYYYYYYYYYYYYYYYYYYYYY')
+if __name__ == '__main__':
+	print('XXXXXXXXXXXXXXXXXXXXXX')
+	app.run(host='0.0.0.0', port=808, debug=True)
+	#from waitress import serve
+	#serve(app, listen='*:80')
 
 
 exit()
@@ -432,8 +445,9 @@ with app.app_context():
 		print(i, '->>', j)
 
 '''
-
+print('YYYYYYYYYYYYYYYYYYYYYY')
 if __name__ == '__main__':
+	print('XXXXXXXXXXXXXXXXXXXXXX')
 	app.run(host='0.0.0.0', port=5000, debug=True)
 	#from waitress import serve
 	#serve(app, listen='*:80')

@@ -2,6 +2,8 @@ from containers import Cache, Database
 from psycopg2.extras import RealDictCursor
 from utilities import to_json
 
+print('.....................')
+
 DB = Database()
 CONNECTION = DB.getconn()
 TRANSLATIONS = Cache()

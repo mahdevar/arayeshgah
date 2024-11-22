@@ -53,6 +53,8 @@ services:
         condition: service_healthy
     ports:
       - $COMPOSE_PROJECT_PORT:8080
+    #entrypoint: python3 init.py
+
 
 volumes:
   files:
