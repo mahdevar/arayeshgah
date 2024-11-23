@@ -9,4 +9,4 @@ COPY . .
 RUN pip3 install --upgrade pip
 RUN pip3 install --requirement requirements.txt
 RUN pip3 install gunicorn
-ENTRYPOINT ["gunicorn", "--preload", "--workers=9", "--threads=100", "--bind=0.0.0.0:8080", "main:app"]
+ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:5000", "--preload", "--threads=100", "--workers=9", "main:app"]
