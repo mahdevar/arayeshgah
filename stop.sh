@@ -1,7 +1,7 @@
-docker rm $(docker kill $(docker ps -aq))
+docker container stop $(docker container ls -a -q)
+docker container rm --force $(docker container ls -a -q)
+docker rm $(docker kill $(docker ps -a -q))
 docker rmi -f $(docker images -a -q)
-docker container stop $(docker container ls --all --quiet)
-docker container rm --force $(docker container ls --all --quiet)
 docker rmi $(docker images -q)
-docker volume rm --force $(docker volume ls --quiet)
+docker volume rm -f $(docker volume ls -q)
 docker system prune -a -f
