@@ -14,8 +14,9 @@ services:
       POSTGRES_DB: $DB_DATABASE
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_USER: $DB_USER
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --no-locale
     healthcheck:
-      test: pg_isready
+      test: pg_isready --username=$DB_USER
     volumes:
       - tables:/var/lib/postgresql/data
       - ./queries:/docker-entrypoint-initdb.d
@@ -52,7 +53,7 @@ services:
       session:
         condition: service_healthy
     ports:
-      - $COMPOSE_PROJECT_PORT:8080
+      - $COMPOSE_PROJECT_PORT:5000
     #entrypoint: python3 init.py
 
 
