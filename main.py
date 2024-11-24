@@ -26,7 +26,7 @@ def home():
 print('YYYYYYYYYYYYYYYYYYYYYY')
 if __name__ == '__main__':
 	print('XXXXXXXXXXXXXXXXXXXXXX')
-	app.run(host='0.0.0.0', port=808, debug=True)
+	app.run(host='0.0.0.0', port=5000, debug=True)
 	#from waitress import serve
 	#serve(app, listen='*:80')
 
