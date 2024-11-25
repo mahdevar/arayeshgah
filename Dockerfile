@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONUTF8=1
 COPY . .
-RUN pip3 install --upgrade pip
-RUN pip3 install --requirement requirements.txt
-RUN pip3 install gunicorn
+RUN pip3 install --no-cache --upgrade pip
+RUN pip3 install --no-cache --requirement requirements.txt
+RUN pip3 install --no-cache gunicorn
 ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:5000", "--preload", "--threads=100", "--workers=9", "main:app"]

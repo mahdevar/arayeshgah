@@ -64,4 +64,4 @@ volumes:
 networks:
   default:
     driver: bridge
-    name: $COMPOSE_PROJECT_NAME-BRIDGE
+    name: $COMPOSE_PROJECT_NAME-net
