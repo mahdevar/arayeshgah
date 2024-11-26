@@ -2,7 +2,7 @@ from containers import Cache
 from containers import Storage, Session
 from utilities import routing
 
-
+import init
 
 
 from os import system

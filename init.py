@@ -16,5 +16,4 @@ with CONNECTION.cursor(cursor_factory=RealDictCursor) as CURSOR:
 		with open('./file/%s.js' % language, 'w') as file:
 			print('document.translation = %s;' % to_json(pairs), file=file)
 		TRANSLATIONS[language] = pairs
-
 DB.putconn(CONNECTION)
