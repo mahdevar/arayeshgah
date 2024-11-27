@@ -1,6 +1,5 @@
 FROM python:alpine
 #FROM public.ecr.aws/docker/library/python:alpine
-EXPOSE 5000
 WORKDIR /app
 ENV PIP_NO_CACHE_DIR=off
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -11,4 +10,5 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --requirement requirements.txt
 RUN pip install gunicorn
-CMD ["gunicorn", "--bind=0.0.0.0:5000", "--preload", "--threads=100", "--workers=9", "main:app"]
+EXPOSE 5000
+CMD ["gunicorn", "--bind=:5000", "--preload", "--threads=100", "--workers=9", "main:app"]
