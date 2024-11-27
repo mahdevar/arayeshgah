@@ -54,8 +54,8 @@ services:
         condition: service_healthy
     healthcheck:
       test: curl --fail --insecure localhost:5000 || exit 1
-    expose:
-      - 5000
+    ports:
+      - 80:5000
     #entrypoint: python3 init.py
 
   nginx:
