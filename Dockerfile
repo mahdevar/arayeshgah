@@ -13,4 +13,4 @@ RUN pip install --upgrade pip
 RUN pip install --requirement requirements.txt
 RUN pip install gunicorn
 EXPOSE 5000
-CMD ["gunicorn", "--bind=0.0.0.0:5000", "--preload", "--threads=100", "--workers=9", "main:app"]
+CMD ["gunicorn", "--bind=:5000", "--preload", "--threads=100", "--workers=3", "main:app"]
