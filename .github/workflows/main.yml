@@ -13,14 +13,14 @@ jobs:
       - name: نوشتن کلید پنهان
         run: |
           cd  ~/.ssh
-          echo "$secrets.PRIVATE_KEY" > id_ed25519
+          echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
           chmod 600 id_ed25519
 
       - name: نوشتن کلید آشکار دستگاه‌ها
         run: |
           cd  ~/.ssh
-          echo "$secrets.KNOWN_HOSTS" > known_hosts
+          echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
         run: |
-          ssh -p $secrets.PORT $secrets.USER@$secrets.SERVER "cd $secrets.APP_FOLDER && rebuild"
+          ssh -p ${{secrets.PORT}} ${{secrets.USER}}@${{secrets.SERVER}} "cd ${{secrets.APP_FOLDER}} && bash rebuild"
