@@ -6,13 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ساخت پوشه‌ای برای نوشتن کلید پنهان
-        run: mkdir ~/.ssh
+        run: |
+          mkdir ~/.ssh
+          chmod 700 ~/.ssh
+          cd  ~/.ssh
 
       - name: نوشتن کلید پنهان
-        run: echo "${{secrets.PRIVATE_KEY}}" > ~/.ssh/id_ed25519
+        run: echo "${{secrets.PRIVATE_KEY}}" > id_ed25519
 
       - name: نوشتن کلید آشکار دستگاه‌ها
-        run: echo "${{secrets.KNOWN_HOSTS}}" > ~/.ssh/known_hosts
+        run: echo "${{secrets.KNOWN_HOSTS}}" > known_hosts
 
       - name: پیوستن به دستگاه پایانی
         run: |
