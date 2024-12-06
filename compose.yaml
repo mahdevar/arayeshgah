@@ -60,6 +60,8 @@ services:
     image: nginx:alpine
     #image: public.ecr.aws/docker/library/nginx:alpine
     volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       app:
@@ -67,7 +69,14 @@ services:
     healthcheck:
       test: curl --output /dev/null --silent localhost || exit 1
     ports:
-      - $COMPOSE_PROJECT_PORT:80
+      - 80:80
+      - 443:443
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
 
 volumes:
   files:
