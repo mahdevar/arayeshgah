@@ -1,5 +1,6 @@
 .env
 .idea/
+ssl/
 file/en.js
 file/fa.js
 startdb.bat
