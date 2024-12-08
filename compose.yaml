@@ -58,18 +58,6 @@ services:
     ports:
       - 5000:5000
 
-  nginx-http:
-    image: nginx:alpine
-    environment:
-      DOMAIN: $COMPOSE_PROJECT_DOMAIN
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-      - ./nginx-http.conf.template:/etc/nginx/templates/nginx-http.conf.template
-    ports:
-      - 80:80
-
-
   nginx:
     image: nginx:alpine
     #image: public.ecr.aws/docker/library/nginx:alpine
