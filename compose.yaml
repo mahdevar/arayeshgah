@@ -73,27 +73,15 @@ services:
   nginx:
     image: nginx:alpine
     #image: public.ecr.aws/docker/library/nginx:alpine
-    environment:
-      DOMAIN: $COMPOSE_PROJECT_DOMAIN
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template
-    #depends_on:
-    #  app:
-    #    condition: service_healthy
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      app:
+        condition: service_healthy
     healthcheck:
       test: curl --output /dev/null --silent localhost || exit 1
     ports:
-      - 80:80
-      - 443:443
-
-  certbot:
-    image: certbot/certbot
-    command: certonly --agree-tos --domain $COMPOSE_PROJECT_DOMAIN --domain www.$COMPOSE_PROJECT_DOMAIN --email $COMPOSE_PROJECT_EMAIL --no-eff-email --staging --webroot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - $COMPOSE_PROJECT_PORT:80
 
 volumes:
   files:
