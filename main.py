@@ -1,6 +1,6 @@
 from atexit import register as run_at_exit
 from base64 import b32hexencode
-from functools import partial, wraps
+from functools import partial
 from hashlib import sha1
 from json import dumps, loads
 from logging import basicConfig as logging_config, DEBUG
@@ -49,9 +49,7 @@ G = app.jinja_env.globals
 if gettrace():
 	logging_config(level=DEBUG)
 LOG = app.logger.info
-new_user_lock = Semaphore()
 chdir(app.root_path)
-# Allowed resources
 
 
 # Utility functions
@@ -62,36 +60,13 @@ uuid = lambda prefix='': prefix + b32hexencode(urandom(20)).decode()
 
 
 
+'''
 def get_nearby_requests():
 	# SELECT ST_ASTEXT(T.LOC) AS POINT,	ST_DISTANCE(LOC, POINT(49, 49)) AS DIST FROM T ORDER BY ST_DISTANCE(LOC, POINT(49, 49)) LIMIT 2;
 	read_table('SELECT ST_ASTEXT(T.LOC) AS POINT, ST_DISTANCE(LOC, POINT(49, 49)) AS DIST FROM T ORDER BY ST_DISTANCE(LOC, POINT(49, 49)) LIMIT 2')
-
+'''
 
 # Simple scheduler
-__STOP_SCHEDULER__ = Event()
-__SCHEDULED_FUNCTIONS__ = []
-
-
-def schedule(interval):
-	def decorator(function):
-		@wraps(function)
-		def repeater(*args, **kwargs):
-			while not __STOP_SCHEDULER__.wait(interval):
-				function(*args, **kwargs)
-
-		__SCHEDULED_FUNCTIONS__.append(repeater)
-		return repeater
-
-	return decorator
-
-
-'''
-@schedule(10 * ALLOWED_INACTIVITY)
-def log_inactive_users_out():
-	inactive_users = [user for user, data in USERS.items() if time() - data['last activity time'] > ALLOWED_INACTIVITY]
-	for user in inactive_users:
-		del USERS[user]
-'''
 
 # Global macros for accessing the database
 def _execute_(*args, **kwargs):
@@ -326,10 +301,6 @@ with app.app_context():
 			print('document.translation = %s;' % to_json(translation), file=file)
 	G['LANGUAGES'] = TRANSLATIONS.keys()
 	POOL.putconn(g.connection)
-# Start scheduled tasks
-for scheduled_function in __SCHEDULED_FUNCTIONS__:
-	Thread(target=scheduled_function, daemon=True).start()
-run_at_exit(__STOP_SCHEDULER__.set)
 
 '''
 
