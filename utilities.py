@@ -42,3 +42,8 @@ class HTTP:
     __slots__ = codes.keys()
 for name, code in codes.items():
     setattr(HTTP, name, (EMPTY, code))
+
+
+# Utility functions
+hash_string = lambda string: b32hexencode(sha1(string.encode()).digest()).decode()
+uuid = lambda prefix='': prefix + b32hexencode(urandom(20)).decode()
