@@ -40,8 +40,6 @@ app = Flask(__name__, static_folder='file')
 app.jinja_env.line_statement_prefix = '#'
 G = app.jinja_env.globals
 #CONFIG = app.config
-DEFAULT_LANGUAGE = 'fa'
-ALLOWED_INACTIVITY = 6 * 60
 # Database specific configurations
 # CONFIG['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 # Initialize
