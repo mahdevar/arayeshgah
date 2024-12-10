@@ -25,3 +25,25 @@ def routing(blueprints, **m):
 		return f
 
 	return decorator
+
+
+class HTTP:
+        ACCEPTED = EMPTY, 202
+        CONFLICT = EMPTY, 409
+        CREATED = EMPTY, 201
+        FORBIDDEN = EMPTY, 403
+        METHOD_NOT_ALLOWED = EMPTY, 405
+        NOT_ACCEPTABLE = EMPTY, 406
+        NO_CONTENT = EMPTY, 204
+        OK = EMPTY, 200
+        UNAUTHORIZED = EMPTY, 401
+
+class HTTP:
+    __slots__ = codes.keys()
+for name, code in codes.items():
+    setattr(HTTP, name, (EMPTY, code))
+
+
+# Utility functions
+hash_string = lambda string: b32hexencode(sha1(string.encode()).digest()).decode()
+uuid = lambda prefix='': prefix + b32hexencode(urandom(20)).decode()
