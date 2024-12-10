@@ -13,44 +13,31 @@ from minio import Minio
 from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import ThreadedConnectionPool as CreatePool
-import config
-from containers import Database, Session
+from config import ALLOWED_INACTIVITY, DEFAULT_LANGUAGE
+from containers import Cache, Database, Session
 
+from init import load_languages
+from utilities import HTTP, uuid
 
-EMPTY = '' # json_response({})
-
-
-app = Flask(__name__, static_folder='file')
+app = Flask(__name__)
 app.jinja_env.line_statement_prefix = '#'
 G = app.jinja_env.globals
 #CONFIG = app.config
 # Database specific configurations
 # CONFIG['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 # Initialize
-#TRANSLATIONS = {}
+
+load_languages()
+
+CACHE = Cache()
 
 #exit()
-if gettrace():
+'''if gettrace():
 	logging_config(level=DEBUG)
 LOG = app.logger.info
+'''
 chdir(app.root_path)
 
-
-# Utility functions
-hash_string = lambda string: b32hexencode(sha1(string.encode()).digest()).decode()
-uuid = lambda prefix='': prefix + b32hexencode(urandom(20)).decode()
-
-
-
-
-
-'''
-def get_nearby_requests():
-	# SELECT ST_ASTEXT(T.LOC) AS POINT,	ST_DISTANCE(LOC, POINT(49, 49)) AS DIST FROM T ORDER BY ST_DISTANCE(LOC, POINT(49, 49)) LIMIT 2;
-	read_table('SELECT ST_ASTEXT(T.LOC) AS POINT, ST_DISTANCE(LOC, POINT(49, 49)) AS DIST FROM T ORDER BY ST_DISTANCE(LOC, POINT(49, 49)) LIMIT 2')
-'''
-
-# Simple scheduler
 
 # Global macros for accessing the database
 def _execute_(*args, **kwargs):
@@ -73,7 +60,7 @@ new_id = lambda entity: read_row('SELECT nextval(\'new_%s\')' % entity)['nextval
 @app.template_global()
 def _(string, language=None):
 	try:
-		return TRANSLATIONS[language or g.language][string]
+		return CACHE[language or g.language][string]
 	except KeyError:
 		return string
 
@@ -105,7 +92,7 @@ def load_user():
 	else:
 		g.user = None
 	g.language = request.cookies.get('LANGUAGE') or request.headers.get('accept-language')[:2]
-	if g.language not in TRANSLATIONS:
+	if g.language not in CACHE:
 		g.language = DEFAULT_LANGUAGE
 
 
@@ -114,7 +101,7 @@ def csrf_protection():
 	if request.method == 'POST':
 		if g.user:
 			if request.headers.get('CSRF') != g.user['CSRF']:
-				return EMPTY, 417
+				return HTTP.EXPECTATION_FAILED
 			g.user['CSRF'] = uuid()
 		else:
 			if request.endpoint not in ('sign_in', 'sign_up'):
@@ -264,7 +251,7 @@ def static_from_root():
 @app.route('/favicon.ico')
 @app.route('/favicon.svg')
 def fav():
-	return send_file('./file/favicon.svg')
+	return send_file('./static/favicon.svg')
 
 POOL = CreatePool(1, 100, **config.sql)
 with app.app_context():
@@ -281,7 +268,7 @@ with app.app_context():
 	for language in [value for value in read_row('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'').values() if value != 'LANGUAGE CODE']:
 		TRANSLATIONS[language] = {key: value for key, value in [list(k.values()) for k in read_table('SELECT id, %s FROM translations' % language)]}
 	for language, translation in TRANSLATIONS.items():
-		with open('./file/%s.js' % language, 'w', encoding='utf-8') as file:
+		with open('./static/%s.js' % language, 'w', encoding='utf-8') as file:
 			print('document.translation = %s;' % to_json(translation), file=file)
 	G['LANGUAGES'] = TRANSLATIONS.keys()
 	POOL.putconn(g.connection)
@@ -295,9 +282,3 @@ with app.app_context():
 		print(i, '->>', j)
 
 '''
-print('YYYYYYYYYYYYYYYYYYYYYY')
-if __name__ == '__main__':
-	print('XXXXXXXXXXXXXXXXXXXXXX')
-	app.run(host='0.0.0.0', port=5000, debug=True)
-	#from waitress import serve
-	#serve(app, listen='*:80')

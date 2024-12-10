@@ -6,11 +6,10 @@ ENV PIP_ROOT_USER_ACTION=ignore
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONUTF8=1
-#COPY --link . .
-COPY . .
+COPY requirements.txt requirements.txt
 RUN apk add curl
 RUN pip install --upgrade pip
 RUN pip install --requirement requirements.txt
 RUN pip install gunicorn
-EXPOSE 5000
-CMD ["gunicorn", "--bind=:5000", "--preload", "--threads=100", "--workers=3", "main:app"]
+EXPOSE 8000
+CMD ["gunicorn", "--preload", "--reload", "--threads=100", "--workers=3", "main:app"]

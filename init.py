@@ -16,7 +16,7 @@ def load_languages():
 			print('>>>>>>>>>>>', language)
 			cursor.execute('SELECT id, %s FROM translations' % language)
 			pairs = {key: value for key, value in [list(k.values()) for k in cursor.fetchall()]}
-			with open('./file/%s.js' % language, 'w') as file:
+			with open('./static/%s.js' % language, 'w') as file:
 				print('document.translation = %s;' % jsonify(pairs), file=file)
 			translations[language] = pairs
 	db.putconn(connection)
