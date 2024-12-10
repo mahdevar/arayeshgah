@@ -1,19 +1,22 @@
+__all__ = ['load_languages']
 from containers import Cache, Database
 from psycopg2.extras import RealDictCursor
-from utilities import to_json
+from utilities import jsonify
 
-print('.....................')
 
-DB = Database()
-CONNECTION = DB.getconn()
-TRANSLATIONS = Cache()
-with CONNECTION.cursor(cursor_factory=RealDictCursor) as CURSOR:
-	CURSOR.execute('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'')
-	for language in [value for value in CURSOR.fetchone().values() if value != 'LANGUAGE CODE']:
-		print('>>>>>>>>>>>', language)
-		CURSOR.execute('SELECT id, %s FROM translations' % language)
-		pairs = {key: value for key, value in [list(k.values()) for k in CURSOR.fetchall()]}
-		with open('./file/%s.js' % language, 'w') as file:
-			print('document.translation = %s;' % to_json(pairs), file=file)
-		TRANSLATIONS[language] = pairs
-DB.putconn(CONNECTION)
+def load_languages():
+	db = Database()
+	connection = db.getconn()
+	translations = Cache()
+	with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+		cursor.execute('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'')
+		languages = [value for value in cursor.fetchone().values() if value != 'LANGUAGE CODE']
+		translations['languages'] = languages
+		for language in languages:
+			print('>>>>>>>>>>>', language)
+			cursor.execute('SELECT id, %s FROM translations' % language)
+			pairs = {key: value for key, value in [list(k.values()) for k in cursor.fetchall()]}
+			with open('./file/%s.js' % language, 'w') as file:
+				print('document.translation = %s;' % jsonify(pairs), file=file)
+			translations[language] = pairs
+	db.putconn(connection)
