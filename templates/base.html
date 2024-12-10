@@ -16,14 +16,14 @@
 		#endfor
 		#endif
 		<link rel="stylesheet" href="//fonts.googleapis.com/css2?family=Material+Symbols+Rounded&family=Roboto&family=Vazirmatn&display=swap">
-		<link rel="stylesheet" href="/file/main.css">
+		<link rel="stylesheet" href="/static/main.css">
 		#if PAGE_STYLESHEET:
 		#for link in PAGE_STYLESHEET:
 		<link rel="stylesheet" href="{{link|safe}}">
 		#endfor
 		#endif
-		<link rel="icon" href="/file/favicon.svg" sizes="any" type="image/svg+xml">
-		<link rel="apple-touch-icon" href="/file/favicon.svg" sizes="any" type="image/svg+xml">
+		<link rel="icon" href="/static/favicon.svg" sizes="any" type="image/svg+xml">
+		<link rel="apple-touch-icon" href="/static/favicon.svg" sizes="any" type="image/svg+xml">
 		#if PAGE_LINKS:
 		#for relation, link in PAGE_LINKS.items():
 		<link rel="{{relation}}" href="{{link|safe}}">
@@ -36,8 +36,8 @@
 		#endset
 		{{'<style>\n\t\t\t'|safe + text.rstrip('\r\n').replace('\n', '\n\t\t\t') + '\n\t\t</style>'|safe}}
 		#endif
-#}		<script src="/file/{{g.language}}.js"></script>
-		<script src="/file/main.js"></script>
+#}		<script src="/static/{{g.language}}.js"></script>
+		<script src="/static/main.js"></script>
 		#if PAGE_LIBRARIES:
 		#for library in PAGE_LIBRARIES:
 		<script src="{{library}}"></script>
@@ -63,6 +63,6 @@
 			</article>
 		</main>
 		#include "footer.html"
-		<script src="/file/setup.js"></script>
+		<script src="/static/setup.js"></script>
 	</body>
 </html>
