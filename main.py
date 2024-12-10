@@ -1,17 +1,14 @@
 from atexit import register as run_at_exit
-from base64 import b32hexencode
 from functools import partial
-from hashlib import sha1
 from json import dumps, loads
 from logging import basicConfig as logging_config, DEBUG
-from os import chdir, urandom, getpid
+from os import chdir, getpid
 from pathlib import Path
 from sys import gettrace
 from threading import Event, Semaphore, Thread
 from time import time
 from jdatetime import datetime as jdt, j_days_in_month
-from flask import abort, Flask, g, render_template, request, send_file, Response, make_response
-from flask.wrappers import Response
+from flask import abort, Flask, g, render_template, request, send_file, make_response
 from minio import Minio
 from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
@@ -20,20 +17,7 @@ import config
 from containers import Database, Session
 
 
-to_json = lambda data: '{}' if data is None else dumps(data, ensure_ascii=False, separators=(',', ':'))
-response = lambda data: Response(to_json(data), mimetype='application/json')
 EMPTY = '' # json_response({})
-
-class HTTP:
-	ACCEPTED = EMPTY, 202
-	CONFLICT = EMPTY, 409
-	CREATED = EMPTY, 201
-	FORBIDDEN = EMPTY, 403
-	METHOD_NOT_ALLOWED = EMPTY, 405
-	NOT_ACCEPTABLE = EMPTY, 406
-	NO_CONTENT = EMPTY, 204
-	OK = EMPTY, 200
-	UNAUTHORIZED = EMPTY, 401
 
 
 app = Flask(__name__, static_folder='file')

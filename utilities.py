@@ -3,8 +3,12 @@ __all__ = ['to_json']
 from annotation import Dictionary, Number, String
 from threading import Event
 from functools import wraps
-from flask import blueprints
+from hashlib import sha1
+from os import urandom
+from flask import blueprints, Response
+from base64 import b32hexencode
 from json import dumps
+#from flask.wrappers import Response
 
 
 def to_json(data: Dictionary | Number | String) -> String:
@@ -60,24 +64,29 @@ for scheduled_function in __SCHEDULED_FUNCTIONS__:
 run_at_exit(__STOP_SCHEDULER__.set)
 '''
 
+EMPTY = ''  # json_response({})
+
 
 class HTTP:
-        ACCEPTED = EMPTY, 202
-        CONFLICT = EMPTY, 409
-        CREATED = EMPTY, 201
-        FORBIDDEN = EMPTY, 403
-        METHOD_NOT_ALLOWED = EMPTY, 405
-        NOT_ACCEPTABLE = EMPTY, 406
-        NO_CONTENT = EMPTY, 204
-        OK = EMPTY, 200
-        UNAUTHORIZED = EMPTY, 401
-
-class HTTP:
-    __slots__ = codes.keys()
-for name, code in codes.items():
-    setattr(HTTP, name, (EMPTY, code))
+	ACCEPTED = EMPTY, 202
+	CONFLICT = EMPTY, 409
+	CREATED = EMPTY, 201
+	FORBIDDEN = EMPTY, 403
+	METHOD_NOT_ALLOWED = EMPTY, 405
+	NOT_ACCEPTABLE = EMPTY, 406
+	NO_CONTENT = EMPTY, 204
+	OK = EMPTY, 200
+	UNAUTHORIZED = EMPTY, 401
 
 
 # Utility functions
-hash_string = lambda string: b32hexencode(sha1(string.encode()).digest()).decode()
-uuid = lambda prefix='': prefix + b32hexencode(urandom(20)).decode()
+def hash_string(string):
+	return b32hexencode(sha1(string.encode()).digest()).decode()
+
+
+def uuid(prefix=''):
+	return prefix + b32hexencode(urandom(20)).decode()
+
+
+def response(data):
+	return Response(to_json(data), mimetype='application/json')
