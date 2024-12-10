@@ -54,7 +54,8 @@ services:
         condition: service_healthy
     healthcheck:
       test: curl --fail --insecure localhost:5000 || exit 1
-    #entrypoint: python3 init.py
+    volumes:
+      - .:/app
     ports:
       - 5000:5000
 
