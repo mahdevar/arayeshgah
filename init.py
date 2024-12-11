@@ -1,4 +1,3 @@
-__all__ = ['load_languages']
 from containers import Cache, Database
 from psycopg2.extras import RealDictCursor
 from utilities import jsonify
@@ -20,3 +19,6 @@ def load_languages():
 				print('document.translation = %s;' % jsonify(pairs), file=file)
 			translations[language] = pairs
 	db.putconn(connection)
+
+
+load_languages()
