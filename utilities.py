@@ -1,8 +1,8 @@
-__all__ = ['hash_string', 'HTTP', 'jsonify', 'response', 'uuid']
+__all__ = ['easy_routing', 'hash_string', 'HTTP', 'jsonify', 'response', 'uuid']
 
 from annotation import Dictionary, Number, String
 from base64 import b32hexencode
-from flask import blueprints, Response
+from flask import Blueprint, Response
 from functools import wraps
 from hashlib import sha1
 from json import dumps
@@ -39,7 +39,9 @@ class HTTP:
 	UNAUTHORIZED = EMPTY, 401
 
 
-def routing(blueprints, **m):
+from flask import app
+
+def easy_routing(app, **m):
 	"""Route creation
 	:param m: parameters used to build a decorator
 	:return: a decorator"""
@@ -48,7 +50,7 @@ def routing(blueprints, **m):
 		rule = '/' + f.__name__.replace('_', '-')
 		for name, t in f.__annotations__.items():
 			rule += '/<%s:%s>' % (t.__name__, name)
-		blueprints.add_url_rule(rule, f.__name__, f, **m)
+		app.add_url_rule(rule, f.__name__, f, **m)
 		return f
 
 	return decorator
