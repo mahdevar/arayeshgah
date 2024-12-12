@@ -12,4 +12,17 @@ RUN pip install --upgrade pip
 RUN pip install --requirement requirements.txt
 RUN pip install gunicorn
 EXPOSE 8000
-CMD ["gunicorn", "--preload", "--reload", "--threads=100", "--workers=3", "main:app"]
+CMD python init.py && gunicorn --bind=:8000 --reload --threads=100 --workers=$(($(nproc) * 2 + 1)) main:app
+#CMD ["gunicorn", "--bind=:8000", "--reload", "--threads=100", "--workers=3", "main:app"]
+
+
+#CMD ["gunicorn", "--bind=:8000", "--reload", "--threads=100", "--workers=3", "main:app"]
+#ENTRYPOINT ["python", "init.py"]
+
+
+#CMD ["gunicorn", "-w", "$(($(nproc) * 2 + 1))", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--reload"]
+
+
+#EXPOSE 5000
+
+#CMD ["python", "initialize.py"] && ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--reload"]
