@@ -4,6 +4,7 @@ from utilities import jsonify
 
 
 def load_languages():
+	db = Database()
 	translations = Cache()
 	with db.connection() as connection, connection.cursor() as cursor:
 		cursor.execute('SELECT * FROM translations WHERE id=\'LANGUAGE CODE\'')
