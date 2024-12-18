@@ -1,4 +1,4 @@
-from atexit import register as run_at_exit
+from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
 from logging import basicConfig as logging_config, DEBUG
@@ -10,9 +10,8 @@ from time import time
 from jdatetime import datetime as jdt, j_days_in_month
 from flask import abort, Flask, g, render_template, request, send_file, make_response
 from minio import Minio
-from psycopg2 import connect, OperationalError
-from psycopg2.extras import RealDictCursor
-from psycopg2.pool import ThreadedConnectionPool as CreatePool
+from multiprocessing import Pool
+from psycopg.rows import dict_row
 from config import ALLOWED_INACTIVITY, DEFAULT_LANGUAGE
 from containers import Cache, Database, Session
 
@@ -26,14 +25,79 @@ post = easy_routing(app, methods=['POST'])
 
 G = app.jinja_env.globals
 #CONFIG = app.config
-app.config['DEBUG'] = True
-
-# Database specific configurations
-# CONFIG['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
-# Initialize
-
+#CONFIG['DEBUG'] = True
+#CONFIG['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
 CACHE = Cache()
+SESSION = Session()
+pool = Database()
+
+
+@contextmanager
+def get_db_connection():
+	connection = pool.getconn()
+	try:
+		yield connection
+	finally:
+		pool.putconn(connection)
+
+
+@contextmanager
+def get_db_cursor(commit=False):
+	with get_db_connection() as connection:
+		cursor = connection.cursor()
+		try:
+			yield cursor
+			if commit:
+				connection.commit()
+		finally:
+			cursor.close()
+
+#pool.autocommit = True
+
+@contextmanager
+def exec2(query, cursor_factory=None, commit=False):
+	connection = pool.getconn()
+	#connection.row_factory = dict_row
+	#connection.autocommit = True
+	print('>>>>>>>>>>>>>>>>>>>>>>>>', connection.autocommit)
+	cursor = connection.cursor(row_factory=dict_row)
+	cursor.execute(query)
+	yield cursor
+	cursor.close()
+	#connection.commit()
+	pool.putconn(connection)
+
+@contextmanager
+def exec(*query, row_factory=None, commit=False):
+	with pool.connection() as connection:
+		with connection.cursor(row_factory=row_factory) as cursor:
+			cursor.execute(*query)
+			yield cursor
+
+		if commit:
+			connection.commit()
+
+
+#with get_db_cursor() as cursor:
+#	cursor.execute()
+	#cursor
+#execute('INSERT INTO translations (id, en, fa) VALUES (0, 1, 2)', commit=True)
+'''
+with pool.connection() as connection, connection.cursor(row_factory=dict_row) as cursor:
+	cursor.execute('select * from translations')
+	a = cursor.fetchall()
+	print('???', )
+	for i in a:
+		print(i, type(i))
+'''
+
+
+with exec('select * from translations') as result:
+	#a = result#.fetchall()
+	for i in result:
+		print(i, type(i))
+
 
 @get
 def aa():
@@ -48,7 +112,7 @@ def home():
 @app.route('/aaa')
 def aaa():
 	print('calling ccc')
-	return 'bbbbbb'
+	return 'ssssssssssssss'
 
 
 
