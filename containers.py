@@ -1,10 +1,11 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
+from atexit import register as run_at_exit
 from annotation import Class, Number, String
 from functools import partial
 from json import dumps, loads
 from minio import Minio
-from psycopg2.pool import ThreadedConnectionPool
+from psycopg_pool import ConnectionPool
 from redis import Redis as OriginalRedis
 
 S = {}
@@ -28,7 +29,14 @@ class Redis(OriginalRedis):
 		self.set(key, dumps(value))
 
 
+class DBPool:
+	def __new__(cls, **p):
+		pool = ConnectionPool('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
+		run_at_exit(pool.close)
+		return pool
+
+
 Cache = factory(Redis, 'CACHE')
-Database = factory(ThreadedConnectionPool, 'DB')
+Database = factory(DBPool, 'DB')
 Session = factory(Redis, 'SESSION')
 Storage = factory(Minio, 'STORAGE')
