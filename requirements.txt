@@ -1,5 +1,6 @@
 Flask
 jdatetime
 minio
-psycopg2-binary
+psycopg[binary]
+psycopg[pool]
 redis
