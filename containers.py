@@ -49,14 +49,20 @@ class DBPool(ConnectionPool):
 
 	@contextmanager
 	def __getitem__(self, query) -> Cursor:
+		print('TO GET:', query)
 		with self.connection() as connection:
 			connection.autocommit = True
 			with connection.cursor() as cursor:
-				if type(query) == tuple:
-					cursor.execute(query[0], query[1])
-				else:
+				if type(query) == str:
 					cursor.execute(query)
+				else:
+					cursor.execute(query[0], query[1])
 				yield cursor
+
+	def __contains__(self, item):
+		print('TO CONTAIN:', item)
+		with self.__getitem__(item) as result:
+			return result.rowcount > 0
 
 	def __setitem__(self, query, values):
 		with self.connection() as connection, connection.cursor() as cursor:
