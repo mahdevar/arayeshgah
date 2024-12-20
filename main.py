@@ -98,16 +98,32 @@ with pool.exec2('select * from users') as result:
 	print('result;', result)
 
 
-print('>>>>', r'INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته'])
+#print('>>>>', r'INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته'])
 #with pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته']] as result:
 #	result.connection.commit()
 #	pass
 
-pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)'] = [['a', 'unknown', 'ناشاخته'], ['b', 'unknown', 'ناشاخته'], ['c', 'unknown', 'ناشاخته']]
+#pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)'] = [['a', 'unknown', 'ناشاخته'], ['b', 'unknown', 'ناشاخته'], ['c', 'unknown', 'ناشاخته']]
 
 from dataclasses import dataclass
 #a = pool.row('select * from translations', row_factory=dict_row)
 #b = pool.rows('SELECT * FROM users WHERE id=%s', [0])
+
+if ['select * from users where id=%s', [0]] in pool:
+	print('HHHHHHHHHHHHH')
+else:
+	print('NNNNNNNNNNNNNNNNNN')
+
+with pool["select column_name from information_schema.columns where table_schema = 'public' and table_name='users'"] as result:
+	for i in result:
+		print('>-----', i)
+
+with pool["SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"] as result:
+	for i in result:
+		print('>====', i)
+
+	
+
 with pool['select * from translations where id like %s', ['%']] as result:
 	n = [i.name for i in result.description]
 	for i in result:
