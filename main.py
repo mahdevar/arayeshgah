@@ -112,7 +112,7 @@ def home():
 @app.route('/aaa')
 def aaa():
 	print('calling ccc')
-	return 'ssssssssssssss'
+	return 'سلام'
 
 
 
