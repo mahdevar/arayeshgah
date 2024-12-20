@@ -1,7 +1,11 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
 from atexit import register as run_at_exit
+
+from psycopg import Cursor
+
 from annotation import Class, Number, String
+from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
 from minio import Minio
@@ -29,11 +33,61 @@ class Redis(OriginalRedis):
 		self.set(key, dumps(value))
 
 
-class DBPool:
-	def __new__(cls, **p):
-		pool = ConnectionPool('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
-		run_at_exit(pool.close)
-		return pool
+class DBPool(ConnectionPool):
+	def __init__(self, **p):
+		super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
+		run_at_exit(self.close)
+
+	@contextmanager
+	def exec2(self, query, row_factory=None, commit=False) -> Cursor:
+		with self.connection() as connection:
+			with connection.cursor(row_factory=row_factory) as cursor:
+				cursor.execute(query)
+				yield cursor
+			if commit:
+				connection.commit()
+
+	@contextmanager
+	def __getitem__(self, query) -> Cursor:
+		with self.connection() as connection:
+			connection.autocommit = True
+			with connection.cursor() as cursor:
+				if type(query) == tuple:
+					cursor.execute(query[0], query[1])
+				else:
+					cursor.execute(query)
+				yield cursor
+
+	def __setitem__(self, query, values):
+		with self.connection() as connection, connection.cursor() as cursor:
+			cursor.execute(query, values)
+			#connection.commit()
+
+	@contextmanager
+	def __getitemmmmmmmmm__(self, query) -> Cursor:
+		print('query===========', query)
+		print('p===============', p)
+		print('type======', type(query))
+		print('0-------', query[0])
+		print('1-------', query[1])
+		with self.connection() as connection:
+			#connection.autcommit = True
+			with connection.cursor() as cursor:
+				cursor.execute(query)
+				yield cursor
+
+	def exec(self, function, query, parameters=None, row_factory=None, commit=False):
+		with self.connection() as connection:
+			with connection.cursor(row_factory=row_factory) as cursor:
+				cursor.execute(query, parameters)
+				return getattr(cursor, function)()
+
+	def row(self, query, parameters=None, row_factory=None):
+		return self.exec('fetchone', query, parameters, row_factory=row_factory)
+
+	def rows(self, query, parameters=None, row_factory=None):
+		return self.exec('fetchall', query, parameters, row_factory=row_factory)
+
 
 
 Cache = factory(Redis, 'CACHE')
