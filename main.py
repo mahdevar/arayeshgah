@@ -32,7 +32,6 @@ CACHE = Cache()
 SESSION = Session()
 pool = Database()
 
-
 @contextmanager
 def get_db_connection():
 	connection = pool.getconn()
@@ -91,14 +90,53 @@ with pool.connection() as connection, connection.cursor(row_factory=dict_row) as
 	for i in a:
 		print(i, type(i))
 '''
+with pool.exec2('select * from users') as result:
+	a = result.description
+	b = result.pgresult
+	print('description:', [[i.name, i.type_code] for i in a])
+	print('pgresult:', b, result.rowcount)
+	print('result;', result)
 
 
+print('>>>>', r'INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته'])
+#with pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته']] as result:
+#	result.connection.commit()
+#	pass
+
+pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)'] = [['a', 'unknown', 'ناشاخته'], ['b', 'unknown', 'ناشاخته'], ['c', 'unknown', 'ناشاخته']]
+
+from dataclasses import dataclass
+#a = pool.row('select * from translations', row_factory=dict_row)
+#b = pool.rows('SELECT * FROM users WHERE id=%s', [0])
+with pool['select * from translations where id like %s', ['%']] as result:
+	n = [i.name for i in result.description]
+	for i in result:
+		print('<<', *zip(n, i))
+with pool['select * from users where id=%s', [10]] as result:
+	for i in result:
+		print('<<', i)
+
+
+'''
+with pool['select * from users where id=%s', [0]] as result:
+	n = result.pgresult.nfields
+	print('___', n)
+	for i in result:
+		print('<<', i)
+#for i, c in enumerate(pool.rows('select * from translations')):
+#	print('>>',i, ' ->', c)
+
+print('>>>', a, b)
+
+'''
+'''
 with exec('select * from translations') as result:
 	#a = result#.fetchall()
-	for i in result:
-		print(i, type(i))
+	print(type(result))
+	#for i in result:
+	#	print(i, type(i))
 
-
+'''
 @get
 def aa():
 	return 2/0
