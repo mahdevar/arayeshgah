@@ -109,25 +109,26 @@ from dataclasses import dataclass
 #a = pool.row('select * from translations', row_factory=dict_row)
 #b = pool.rows('SELECT * FROM users WHERE id=%s', [0])
 
-if ['select * from users where id=%s', [0]] in pool:
+if ('select * from users where id=%s', [0]) in pool:
 	print('HHHHHHHHHHHHH')
 else:
 	print('NNNNNNNNNNNNNNNNNN')
 
+'''
 with pool["select column_name from information_schema.columns where table_schema = 'public' and table_name='users'"] as result:
 	for i in result:
 		print('>-----', i)
-
 with pool["SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"] as result:
 	for i in result:
 		print('>====', i)
+'''
 
-	
+with pool['select * from translations where id like %s limit 5', ['%']] as result:
+	#print('???????????????', result.rownumber)
 
-with pool['select * from translations where id like %s', ['%']] as result:
 	n = [i.name for i in result.description]
 	for i in result:
-		print('<<', *zip(n, i))
+		print('<<', *zip(n, i), result.rownumber)
 with pool['select * from users where id=%s', [10]] as result:
 	for i in result:
 		print('<<', i)

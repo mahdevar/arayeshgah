@@ -51,7 +51,7 @@ class DBPool(ConnectionPool):
 	def __getitem__(self, query) -> Cursor:
 		print('TO GET:', query)
 		with self.connection() as connection:
-			connection.autocommit = True
+			#connection.autocommit = True
 			with connection.cursor() as cursor:
 				if type(query) == str:
 					cursor.execute(query)
@@ -61,7 +61,7 @@ class DBPool(ConnectionPool):
 
 	def __contains__(self, item):
 		print('TO CONTAIN:', item)
-		with self.__getitem__(item) as result:
+		with self[item] as result:
 			return result.rowcount > 0
 
 	def __setitem__(self, query, values):
