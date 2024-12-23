@@ -4,7 +4,7 @@ from atexit import register as run_at_exit
 
 from psycopg import Cursor
 
-from annotation import Class, Number, String
+from annotation import Class, Number, String, Union
 from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
@@ -29,7 +29,7 @@ class Redis(OriginalRedis):
 	def __getitem__(self, item):
 		return loads(self.get(item))
 
-	def __setitem__(self, key, value: [float, int, str, dict]):
+	def __setitem__(self, key, value: Union[float, int, str, dict]):
 		self.set(key, dumps(value))
 
 
