@@ -1,6 +1,6 @@
-__all__ = ['Any', 'Class', 'Dictionary', 'Number', 'Serializable', 'String', 'TypeVar', 'Union']
+__all__ = ['Any', 'Class', 'Dictionary', 'Generator', 'Number', 'Serializable', 'String', 'TypeVar', 'Union']
 
-from typing import Any, Callable, TypeVar, Union
+from typing import Any, Callable, Generator, TypeVar, Union
 
 Class = TypeVar('Class', bound=Callable)
 Dictionary = dict

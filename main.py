@@ -78,6 +78,11 @@ def exec(*query, row_factory=None, commit=False):
 			connection.commit()
 
 
+for i, r in enumerate(pool['select * from translations']):
+	print(i, ' -> ', r)
+
+
+
 #with get_db_cursor() as cursor:
 #	cursor.execute()
 	#cursor
@@ -90,13 +95,16 @@ with pool.connection() as connection, connection.cursor(row_factory=dict_row) as
 	for i in a:
 		print(i, type(i))
 '''
-with pool.exec2('select * from users') as result:
+
+
+'''
+with pool.execute('select * from users') as result:
 	a = result.description
 	b = result.pgresult
 	print('description:', [[i.name, i.type_code] for i in a])
-	print('pgresult:', b, result.rowcount)
+	#print('pgresult:', [x for x in b], result.rowcount)
 	print('result;', result)
-
+'''
 
 #print('>>>>', r'INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته'])
 #with pool['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['x', 'unknown', 'ناشاخته']] as result:
@@ -108,6 +116,8 @@ with pool.exec2('select * from users') as result:
 from dataclasses import dataclass
 #a = pool.row('select * from translations', row_factory=dict_row)
 #b = pool.rows('SELECT * FROM users WHERE id=%s', [0])
+
+
 
 if ('select * from users where id=%s', [0]) in pool:
 	print('HHHHHHHHHHHHH')

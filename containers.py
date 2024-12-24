@@ -1,10 +1,10 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
 from atexit import register as run_at_exit
-
 from psycopg import Cursor
+from psycopg.rows import dict_row
 
-from annotation import Class, Number, Serializable, String
+from annotation import Class, Generator, Number, Serializable, String
 from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
@@ -26,10 +26,10 @@ def factory(cls: Class, prefix: String, **custom: Number | String) -> Class:
 
 
 class Redis(OriginalRedis):
-	def __getitem__(self, item):
+	def __getitem__(self, item) -> Serializable:
 		return loads(self.get(item))
 
-	def __setitem__(self, key, value: Serializable):
+	def __setitem__(self, key, value: Serializable) -> None:
 		self.set(key, dumps(value))
 
 
@@ -39,30 +39,25 @@ class DBPool(ConnectionPool):
 		run_at_exit(self.close)
 
 	@contextmanager
-	def exec2(self, query, row_factory=None, commit=False) -> Cursor:
-		with self.connection() as connection:
-			with connection.cursor(row_factory=row_factory) as cursor:
-				cursor.execute(query)
-				yield cursor
-			if commit:
-				connection.commit()
+	def execute(self, query, parameters=None, commit=False, row_factory=None) -> Generator[Cursor]:
+		with self.connection() as connection, connection.cursor(row_factory=row_factory) as cursor:
+			yield cursor.execute(query, parameters)
+		if commit:
+			connection.commit()
 
-	@contextmanager
 	def __getitem__(self, query) -> Cursor:
-		print('TO GET:', query)
-		with self.connection() as connection:
-			#connection.autocommit = True
-			with connection.cursor() as cursor:
-				if type(query) == str:
-					cursor.execute(query, None)
-				else:
-					cursor.execute(query[0], query[1])
-				yield cursor
+		print('>>>>>>>>', len(query))
+		print('TO GET:', *query)
+		with self.connection() as connection, connection.cursor(row_factory=dict_row) as cursor:
+			if type(query) == str:
+				cursor.execute(query)
+			else:
+				cursor.execute(query[0], query[1])
+			return cursor
 
 	def __contains__(self, item):
 		print('TO CONTAIN:', item)
-		with self[item] as result:
-			return result.rowcount > 0
+		return self[item].rowcount > 0
 
 	def __setitem__(self, query, values):
 		with self.connection() as connection, connection.cursor() as cursor:
