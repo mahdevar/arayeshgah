@@ -2,11 +2,9 @@ __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
 from annotation import Class, Dictionary, List, Number, Serializable, String
 from atexit import register as run_at_exit
-from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
 from minio import Minio
-from psycopg import Cursor
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 from redis import Redis as OriginalRedis
