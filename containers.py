@@ -1,14 +1,13 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
+from annotation import Class, Dictionary, List, Number, Serializable, String
 from atexit import register as run_at_exit
-from psycopg import Cursor
-from psycopg.rows import dict_row
-
-from annotation import Class, Generator, Number, Serializable, String
 from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
 from minio import Minio
+from psycopg import Cursor
+from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 from redis import Redis as OriginalRedis
 
@@ -35,60 +34,26 @@ class Redis(OriginalRedis):
 
 class DBPool(ConnectionPool):
 	def __init__(self, **p):
-		super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
+		super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row})
+		# super().__init__(min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row, ...})
 		run_at_exit(self.close)
 
-	@contextmanager
-	def execute(self, query, parameters=None, commit=False, row_factory=None) -> Generator[Cursor]:
-		with self.connection() as connection, connection.cursor(row_factory=row_factory) as cursor:
-			yield cursor.execute(query, parameters)
-		if commit:
-			connection.commit()
-
-	def __getitem__(self, query) -> Cursor:
-		print('>>>>>>>>', len(query))
-		print('TO GET:', *query)
-		with self.connection() as connection, connection.cursor(row_factory=dict_row) as cursor:
+	def __getitem__(self, query) -> Dictionary | None:
+		with self.connection() as connection, connection.cursor() as cursor:
 			if type(query) == str:
 				cursor.execute(query)
 			else:
 				cursor.execute(query[0], query[1])
-			return cursor
+			return cursor.fetchone()
 
-	def __contains__(self, item):
-		print('TO CONTAIN:', item)
-		return self[item].rowcount > 0
+	def __call__(self, query, parameters=None) -> List:
+		with self.connection() as connection, connection.cursor() as cursor:
+			cursor.execute(query, parameters)
+			return cursor.fetchall()
 
 	def __setitem__(self, query, values):
 		with self.connection() as connection, connection.cursor() as cursor:
-			cursor.execute(query, values)
-			#connection.commit()
-
-	@contextmanager
-	def __getitemmmmmmmmm__(self, query) -> Cursor:
-		print('query===========', query)
-		print('p===============', p)
-		print('type======', type(query))
-		print('0-------', query[0])
-		print('1-------', query[1])
-		with self.connection() as connection:
-			#connection.autcommit = True
-			with connection.cursor() as cursor:
-				cursor.execute(query)
-				yield cursor
-
-	def exec(self, function, query, parameters=None, row_factory=None, commit=False):
-		with self.connection() as connection:
-			with connection.cursor(row_factory=row_factory) as cursor:
-				cursor.execute(query, parameters)
-				return getattr(cursor, function)()
-
-	def row(self, query, parameters=None, row_factory=None):
-		return self.exec('fetchone', query, parameters, row_factory=row_factory)
-
-	def rows(self, query, parameters=None, row_factory=None):
-		return self.exec('fetchall', query, parameters, row_factory=row_factory)
-
+			cursor.execute(query, values)  # connection.commit()
 
 
 Cache = factory(Redis, 'CACHE')
