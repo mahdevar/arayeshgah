@@ -78,10 +78,40 @@ def exec(*query, row_factory=None, commit=False):
 			connection.commit()
 
 
-for i, r in enumerate(pool['select * from translations']):
+'''
+try:
+	with pool.execute('INSERT INTO atranslations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['y', 'unknown', 'ناشاخته']) as cursor:
+		cursor.commit()
+except:
+	print('!!!!!!!!!ERRRRRRRRRRRRRRR')
+	#result.close()
+'''
+#pool+=[2]
+#pool.execute('INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['y', 'unknown', 'ناشاخته'])
+
+'''
+with pool.connection() as connection:
+	a = connection.execute('INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['z', 'unknown', 'ناشاخته'])
+	print('aaaaaaaaaaaaaaaaaaaaaaaa:', a)
+
+'''
+
+pool += ['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['zzzza', 'unknown', 'ناشاخته']]
+
+
+pool >>
+
+
+for i, r in enumerate(pool('select * from translations')):
 	print(i, ' -> ', r)
 
+print('>', pool['SELECT * FROM users WHERE id=%s', [10]], '<')
 
+
+if data := pool['SELECT * FROM users WHERE id=%s', [0]]:
+	print('<<', data)
+else:
+	print('NONE')
 
 #with get_db_cursor() as cursor:
 #	cursor.execute()
@@ -118,11 +148,14 @@ from dataclasses import dataclass
 #b = pool.rows('SELECT * FROM users WHERE id=%s', [0])
 
 
-
-if ('select * from users where id=%s', [0]) in pool:
+'''
+if 'select * from users where id=2' in pool:
 	print('HHHHHHHHHHHHH')
 else:
 	print('NNNNNNNNNNNNNNNNNN')
+
+
+'''
 
 '''
 with pool["select column_name from information_schema.columns where table_schema = 'public' and table_name='users'"] as result:
@@ -133,15 +166,8 @@ with pool["SELECT table_name FROM information_schema.tables WHERE table_schema =
 		print('>====', i)
 '''
 
-with pool['select * from translations where id like %s limit 5', ['%']] as result:
-	#print('???????????????', result.rownumber)
-
-	n = [i.name for i in result.description]
-	for i in result:
-		print('<<', *zip(n, i), result.rownumber)
-with pool['select * from users where id=%s', [10]] as result:
-	for i in result:
-		print('<<', i)
+for r in pool('select * from translations where id like %s limit 5', ['B%']):
+	print('>>!!>>',r)
 
 
 '''

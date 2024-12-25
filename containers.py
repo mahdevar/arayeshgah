@@ -37,13 +37,21 @@ class DBPool(ConnectionPool):
 		# super().__init__(min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row, ...})
 		run_at_exit(self.close)
 
+
+
+
+
 	@contextmanager
-	def execute(self, query, parameters=None) -> Generator[Cursor]:
+	def execute(self, query) -> Generator[Cursor]:
+		if type(query) == str:
+			parameters = None
+		else:
+			query, parameters = query[0], query[1]
 		with self.connection() as connection, connection.cursor() as cursor:
 			cursor.execute(query, parameters)
 			yield cursor
 
-	def __getitem__(self, query) -> Dictionary | None:
+	def __ge__(self, query) -> Dictionary | None:
 		if type(query) == str:
 			parameters = None
 		else:
@@ -51,9 +59,22 @@ class DBPool(ConnectionPool):
 		with self.execute(query, parameters) as cursor:
 			return cursor.fetchone()
 
-	def __call__(self, query, parameters=None) -> List:
-		with self.execute(query, parameters) as cursor:
+	def __rshift__(self, query) -> List:
+		with self.execute(query) as cursor:
 			return cursor.fetchall()
+
+	def __iadd__(self, query):
+		if type(query) == str:
+			parameters = None
+		else:
+			query, parameters = query[0], query[1]
+		with self.connection() as connection:
+			connection.execute(query, parameters)
+		return self
+	def __setitem__(self, query, parameters):
+		with self.connection() as connection, connection.cursor() as cursor:
+			cursor.execute(query, parameters)
+			connection.commit()
 
 
 Cache = factory(Redis, 'CACHE')
