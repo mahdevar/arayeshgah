@@ -96,19 +96,37 @@ with pool.connection() as connection:
 
 '''
 
-pool += ['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['zzzza', 'unknown', 'ناشاخته']]
+
+def f():
+	a = pool.rows('select * from translations')
+	b = pool.row('SELECT * FROM users WHERE id=%s', [0])
 
 
-pool >>
+from timeit import Timer
+s = Timer(f).timeit(number=10000)
+
+print('->>', s)
+
+exit()
+
+a = pool.row('select * from translations where id like %s limit 5', ['1B%'])
+print('aaaaa', a)
+#pool <<= ['INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['zzb1', 'unknown', 'ناشاخته']]
+pool.commit('INSERT INTO translations (' + ', '.join(['id', 'fa', 'en']) + ') VALUES (%s, %s, %s)', ['zzb3', 'unknown', 'ناشاخته'])
 
 
-for i, r in enumerate(pool('select * from translations')):
+a = pool.rows('select * from translations')
+print('>>a>>', a)
+a = pool.row('select * from translations where id like %s limit 5', ['B%'])
+print('>>a>>', a)
+
+for i, r in enumerate(pool.rows('select * from translations')):
 	print(i, ' -> ', r)
 
-print('>', pool['SELECT * FROM users WHERE id=%s', [10]], '<')
+print('>', pool.row('SELECT * FROM users WHERE id=%s', [10]), '<')
 
 
-if data := pool['SELECT * FROM users WHERE id=%s', [0]]:
+if data := pool.row('SELECT * FROM users WHERE id=%s', [0]):
 	print('<<', data)
 else:
 	print('NONE')

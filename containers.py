@@ -1,8 +1,7 @@
 __all__ = ['Cache', 'Database', 'Session', 'Storage']
 
-from annotation import Class, Cursor, Dictionary, Generator, List, Number, Serializable, String
+from annotation import Class, Dictionary, List, Number, Serializable, String
 from atexit import register as run_at_exit
-from contextlib import contextmanager
 from functools import partial
 from json import dumps, loads
 from minio import Minio
@@ -34,47 +33,27 @@ class Redis(OriginalRedis):
 class DBPool(ConnectionPool):
 	def __init__(self, **p):
 		super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row})
+		#super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
 		# super().__init__(min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row, ...})
 		run_at_exit(self.close)
 
-
-
-
-
-	@contextmanager
-	def execute(self, query) -> Generator[Cursor]:
-		if type(query) == str:
-			parameters = None
-		else:
-			query, parameters = query[0], query[1]
-		with self.connection() as connection, connection.cursor() as cursor:
-			cursor.execute(query, parameters)
-			yield cursor
-
-	def __ge__(self, query) -> Dictionary | None:
-		if type(query) == str:
-			parameters = None
-		else:
-			query, parameters = query[0], query[1]
-		with self.execute(query, parameters) as cursor:
-			return cursor.fetchone()
-
-	def __rshift__(self, query) -> List:
-		with self.execute(query) as cursor:
-			return cursor.fetchall()
-
-	def __iadd__(self, query):
-		if type(query) == str:
-			parameters = None
-		else:
-			query, parameters = query[0], query[1]
+	def commit(self, query: String, parameters: List | None = None) -> None:
 		with self.connection() as connection:
 			connection.execute(query, parameters)
-		return self
-	def __setitem__(self, query, parameters):
+
+	def commits(self, query: String, parameters: List | None = None) -> None:
+		with self.connection() as connection:
+			connection.executemany(query, parameters)
+
+	def row(self, query: String, parameters: List | None = None) -> Dictionary | None:
 		with self.connection() as connection, connection.cursor() as cursor:
 			cursor.execute(query, parameters)
-			connection.commit()
+			return cursor.fetchone()
+
+	def rows(self, query: String, parameters: List | None = None) -> List:
+		with self.connection() as connection, connection.cursor() as cursor:
+			cursor.execute(query, parameters)
+			return cursor.fetchall()
 
 
 Cache = factory(Redis, 'CACHE')

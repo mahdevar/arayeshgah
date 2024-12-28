@@ -1,7 +1,6 @@
-__all__ = ['Any', 'Bool', 'Class', 'Cursor', 'Dictionary', 'Generator', 'List', 'Number', 'Serializable', 'String', 'TypeVar']
+__all__ = ['Any', 'Bool', 'Class', 'Dictionary', 'List', 'Number', 'Serializable', 'String', 'TypeVar']
 
-from typing import Any, Callable, Generator, TypeVar
-from psycopg import Cursor
+from typing import Any, Callable, TypeVar
 
 Bool = bool
 Class = TypeVar('Class', bound=Callable)
