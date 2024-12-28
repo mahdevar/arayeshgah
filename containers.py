@@ -32,9 +32,7 @@ class Redis(OriginalRedis):
 
 class DBPool(ConnectionPool):
 	def __init__(self, **p):
-		super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row})
-		#super().__init__('postgresql://%s:%s@%s:%s/%s' % (p['user'], p['password'], p['host'], p['port'], p['database']), min_size=int(p['minconn']), max_size=int(p['maxconn']))
-		# super().__init__(min_size=int(p['minconn']), max_size=int(p['maxconn']), kwargs={"row_factory": dict_row, ...})
+		super().__init__(min_size=1, max_size=100, kwargs=p | {'row_factory': dict_row})
 		run_at_exit(self.close)
 
 	def commit(self, query: String, parameters: List | None = None) -> None:
