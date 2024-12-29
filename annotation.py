@@ -2,8 +2,6 @@ __all__ = ['Any', 'Bool', 'Class', 'Dictionary', 'List', 'Number', 'Parameter', 
 
 from typing import Any, Callable, TypeVar
 
-from click import Parameter
-
 Bool = bool
 Class = TypeVar('Class', bound=Callable)
 Dictionary = dict
