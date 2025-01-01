@@ -5,7 +5,7 @@ from atexit import register as run_at_exit
 from functools import partial
 from json import dumps, loads
 from minio import Minio
-from psycopg import IntegrityError
+from psycopg import DataError
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 from redis import Redis as OriginalRedis
@@ -48,7 +48,7 @@ class DBPool(ConnectionPool):
 		with self.connection() as connection, connection.cursor() as cursor:
 			cursor.execute(query, parameters)
 			if cursor.rowcount > 1:
-				raise IntegrityError
+				raise DataError
 			return cursor.fetchone()
 
 	def rows(self, query: String, parameters: Parameter = None) -> List:
