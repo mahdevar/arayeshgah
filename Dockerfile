@@ -12,4 +12,7 @@ RUN pip install --upgrade pip
 RUN pip install --requirement /requirements.txt
 RUN pip install gunicorn
 EXPOSE 8000
-CMD python initialize.py && gunicorn --bind=:8000 --reload --threads=100 --workers=$(($(nproc) * 2 + 1)) main:app
+#CMD python initialize.py && gunicorn --bind=:8000 --reload --threads=100 --workers=$(($(nproc) * 2 + 1)) main:app
+#CMD gunicorn --bind=:8000 --reload --threads=1 --workers=1 main:app
+CMD python initialize.py && gunicorn --bind=:8000 --reload --threads=1 --workers=1 main:app
+
